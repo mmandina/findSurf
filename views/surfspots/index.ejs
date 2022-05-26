@@ -1,0 +1,37 @@
+<%- include('partials/head') %>
+
+  <%- include('partials/navbar.ejs') %>
+  <main class="container">
+    <h1>Index of Spots</h1>
+    <div><a href="/surfspots/new">Add Spot</a></div>
+  
+
+      <% for(let spot of surfspots){ %>
+      <div class="card mb-3">
+        <div class="row">
+          <div class="col-md-4">
+            <img class="img-fluid"src="<%= spot.image%>" alt="spot image">
+
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h6 class="card-title"><%= spot.title %> </h5>
+                <p class="card-text"><%= spot.description %></p>
+                <p class="card-text">
+                  <small class="class-muted"><%= spot.location %></small>
+                  <p><small class="class-muted">Difficulty: <%= spot.difficulty %></small></p>
+                </p>
+                <a class="btn btn-primary" href="/surfspots/<%=spot._id%>">Spot Details</a>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <% } %>
+
+  </main>
+
+  <%-include('partials/footer')%>
+
+
+  

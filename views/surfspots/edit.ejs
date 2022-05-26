@@ -1,0 +1,63 @@
+<%- include('partials/head') %>
+
+    <%- include('partials/navbar.ejs') %> 
+    <main class="row">
+    <h1 class="text-center">Edit Spot: <%= spot.title%> </h1>
+    <div class="col-6 offset-3">
+    <form action="/surfspots/<%= spot._id %>/edit?_method=PUT" method="POST" novalidate class="validate">
+      <div class="mb-3">
+        <label class = "form-label" for="title">Spot Name</label>
+        <input class="form-control" type="text" name="surfspot[title]" id="title" value="<%=spot.title %>" required />
+      </div>
+      <div class="mb-3">
+        <label class = "form-label" for="location">Location</label>
+        <input class='form-control'
+          type="text"
+          name="surfspot[location]"
+          id="location"
+          value="<%=spot.location%> required"
+        />
+      </div>
+      <div class="mb-3">
+        <label class = "form-label" for="bottomcomp">Bottom Type</label>
+        <select class= "form-select"name="surfspot[bottomcomp]" id="bottomcomp">
+          <% for(let descriptor of surfSpotDescriptors.bottomcomp){ %>
+          <option value="<%= descriptor %>"<%=descriptor===spot.bottomcomp ? 'selected':''%>><%= descriptor %></option>
+          <% } %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class = "form-label" for="breaktype">Type of Break</label>
+        <select class= "form-select"name="surfspot[breaktype]" id="breaktype">
+          <% for(let descriptor of surfSpotDescriptors.breaktypes){ %>
+          <option value="<%= descriptor %>"<%=descriptor===spot.breaktype ? 'selected':''%>><%= descriptor %></option>
+          <% } %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class = "form-label" for="difficulty">Difficulty</label>
+        <select class= "form-select"name="surfspot[difficulty]" id="difficulty">
+          <% for(let descriptor of surfSpotDescriptors.difficulties){ %>
+          <option value="<%= descriptor %>"<%=descriptor===spot.difficulty? 'selected':''%>><%= descriptor %></option>
+          <% } %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class = "form-label" for="description">Description</label>
+        <textarea class="form-control"
+          type="text"
+          name="surfspot[description]"
+          id="description" required
+          ><%=spot.description%></textarea>
+      </div>
+      <div class="mb-3">
+        <label class ="form-label" for="image">Image URL</label>
+        <input class="form-control"type="text" name="surfspot[image]" id="image" value="<%=spot.image%>"required/>
+      </div>
+      <button class="btn btn-primary mb-3">Submit Changes</button>
+    </form>
+    <a class="btn btn-secondary mb-3"href="/surfspots/">Back to All Spots</a>
+  </div>
+  </main>
+  <script src="/formValidate.js"></script>
+<%-include('partials/footer')%>
