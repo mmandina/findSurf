@@ -56,7 +56,7 @@ app.put("/surfspots/:id/edit", async (req, res) => {
   );
   res.redirect(`/surfspots/${updatedSpot._id}`);
 });
-app.get("/surfspots/:id", async (req, res) => {
+app.get("/surfspots/detail/:id", async (req, res) => {
   //res.send(req.params)
   const spotId = req.params.id;
   const spot = await Surfspot.findById(spotId);
