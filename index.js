@@ -32,14 +32,14 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/surfspots", async (req, res) => {
+app.get("/surfspots", asyncWrap(async (req, res) => {
   const surfspots = await Surfspot.find({});
   res.render("surfspots/index", { surfspots, title: "Surfspot Index" });
-});
+}));
 app.get("/surfspots/new", (req, res) => {
   res.render("surfspots/new", { surfSpotDescriptors, title:"Submit New Surfspot" });
 });
-app.get("/surfspots/edit/:id", async (req, res) => {
+app.get("/surfspots/edit/:id", asyncWrap(async (req, res) => {
   const spotId = req.params.id;
   const spot = await Surfspot.findById(spotId);
   res.render("surfspots/edit", {
@@ -47,7 +47,7 @@ app.get("/surfspots/edit/:id", async (req, res) => {
     surfSpotDescriptors,
     title: `Edit Spot: ${spot.title}`,
   });
-});
+}));
 
 app.put("/surfspots/edit/:id/", asyncWrap(async (req, res) => {
   const spotId = req.params.id;
@@ -58,10 +58,8 @@ app.put("/surfspots/edit/:id/", asyncWrap(async (req, res) => {
   res.redirect(`/surfspots/detail/${updatedSpot._id}`);
 }));
 app.get("/surfspots/detail/:id", asyncWrap(async (req, res) => {
-  //res.send(req.params)
   const spotId = req.params.id;
   const spot = await Surfspot.findById(spotId);
- 
   res.render("surfspots/detail", { spot, title: `${spot.title}` });
 }));
 app.delete("/surfspots/:id", asyncWrap(async (req, res) => {
@@ -74,8 +72,13 @@ app.post("/surfspots/", asyncWrap(async (req, res) => {
   await newSpot.save();
   res.redirect("/surfspots");
 }));
-app.use((req, res) => {
-  res.status(404).send(`${req.method} ${req.path} 404 NOT FOUND`);
+
+app.all('*', (req, res, next) => {
+next(new ExpressError('PAGE NOT FOUND',404))
+})
+app.use((err,req, res,next) => {
+  const { status = 500, message = 'ERROR' } = err;
+  res.status(status).send(message)
 });
 app.listen(3000, () => {
   console.log("serving port 3000");
