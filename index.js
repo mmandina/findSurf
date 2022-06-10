@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const mongoose = require("mongoose");
-const Surfspotmodel = require("./models/Surfspot.js");
+const Surfspotmodel = require("./models/ScraperSpot.js");
 const methodOverride = require("method-override");
 const Surfspot = Surfspotmodel.Surfspot;
 const surfSpotDescriptors=Surfspotmodel.surfSpotDescriptors
@@ -28,8 +28,10 @@ app.use(express.static("public"));
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.render("home");
+app.get("/", async(req, res) => {
+  const test = await Surfspot.findOne()
+  console.log(test.location.country);
+  res.send(test);
 });
 
 app.get("/surfspots", asyncWrap(async (req, res) => {

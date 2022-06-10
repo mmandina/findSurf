@@ -62,3 +62,4 @@ SurfspotSchema = new Schema({
     general:String, //''
   }
 });
+exports.Surfspot = mongoose.model("Surfspot", SurfspotSchema);
