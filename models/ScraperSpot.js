@@ -60,6 +60,7 @@ SurfspotSchema = new Schema({
     description: String, //Consistent spot all year. During summer and hurricane season, the 
     atmosphere: String, //This is a great spot especially if you are y
     general:String, //''
-  }
+  },
+  image: String,
 });
 exports.Surfspot = mongoose.model("Surfspot", SurfspotSchema);
