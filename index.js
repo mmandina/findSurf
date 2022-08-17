@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const app = express();
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); //--dbpath /home/max/mongo/data
 const Surfspotmodel = require("./models/ScraperSpot.js");
 const methodOverride = require("method-override");
 const Surfspot = Surfspotmodel.Surfspot;
@@ -30,8 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", async(req, res) => {
   const test = await Surfspot.findOne()
-  console.log(test.location.country);
-  res.send(test);
+  //console.log(test.location.country);
+  res.redirect("/surfspots");
 });
 
 app.get("/surfspots", asyncWrap(async (req, res) => {
@@ -74,7 +74,6 @@ app.post("/surfspots/", asyncWrap(async (req, res) => {
   await newSpot.save();
   res.redirect("/surfspots");
 }));
-
 app.all('*', (req, res, next) => {
 next(new ExpressError('PAGE NOT FOUND',404))
 })

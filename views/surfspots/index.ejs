@@ -9,17 +9,27 @@
       <% for(let spot of surfspots){ %>
       <div class="card mb-3">
         <div class="row">
-          <div class="col-md-4">
+         <!-- <div class="col-md-4">
             <img class="img-fluid"src="<%= spot.image%>" alt="spot image">
 
-          </div>
+          </div>-->
           <div class="col-md-8">
             <div class="card-body">
-              <h6 class="card-title"><%= spot.title %> </h5>
-                <p class="card-text"><%= spot.description %></p>
+              <h6 class="card-title"><%= spot.spotName %> </h5>
+                <p class="card-text"><%= spot.info.description %></p>
                 <p class="card-text">
-                  <small class="class-muted"><%= spot.location %></small>
-                  <p><small class="class-muted">Difficulty: <%= spot.difficulty %></small></p>
+                  <small class="class-muted">
+                    <% let locationArray= Object.values(spot.location)%> 
+                      <% for (let i=0;i<locationArray.length;i++) { %>
+                       <% let value=locationArray[i] %> 
+                       <% if(locationArray[i+1]){ %> 
+                              <span><%= value ? value+"," : '' %></span>
+                              <% } else { %>
+                                <span><%= value ? value : '' %></span>
+                             <% } %> 
+                        <% } %> 
+                    </small>
+                  <p><small class="class-muted">Difficulty: <%= spot.surfSpotQuality.experience %></small></p>
                 </p>
                 <a class="btn btn-primary" href="/surfspots/detail/<%=spot._id%>">Spot Details</a>
               </div>
