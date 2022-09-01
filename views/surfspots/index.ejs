@@ -19,15 +19,7 @@
                 <p class="card-text"><%= spot.info.description %></p>
                 <p class="card-text">
                   <small class="class-muted">
-                    <% let locationArray= Object.values(spot.location)%> 
-                      <% for (let i=0;i<locationArray.length;i++) { %>
-                       <% let value=locationArray[i] %> 
-                       <% if(locationArray[i+1]){ %> 
-                              <span><%= value ? value+"," : '' %></span>
-                              <% } else { %>
-                                <span><%= value ? value : '' %></span>
-                             <% } %> 
-                        <% } %> 
+                    <%= spot.locationStringify() %> 
                     </small>
                   <p><small class="class-muted">Difficulty: <%= spot.surfSpotQuality.experience %></small></p>
                 </p>

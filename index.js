@@ -62,7 +62,7 @@ app.put("/surfspots/edit/:id/", asyncWrap(async (req, res) => {
 app.get("/surfspots/detail/:id", asyncWrap(async (req, res) => {
   const spotId = req.params.id;
   const spot = await Surfspot.findById(spotId);
-  res.render("surfspots/detail", { spot, title: `${spot.title}` });
+  res.render("surfspots/detailMap", { spot, title: `${spot.title}` });
 }));
 app.delete("/surfspots/:id", asyncWrap(async (req, res) => {
   const spotId = req.params.id;

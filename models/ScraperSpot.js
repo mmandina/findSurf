@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const CoordinatesConv = require('coordinate-parser');
 const Schema = mongoose.Schema;
 //https://www.wannasurf.com/spot/North_America/USA/North_East/New_Jersey/36th_Street/index.html
 SurfspotSchema = new Schema({
@@ -13,13 +14,14 @@ SurfspotSchema = new Schema({
     subzone3: String, //''
     subzone4:String //''
   },
+  
   hasCoordinates: { //True
     type: Boolean,
     required:true,
   },
   coordinates:{
     Lat: String,// 39° 9.431' N
-    Long:String//74° 41.154' W
+    Lon:String//74° 41.154' W
   },
   access: {
     description: String, //easy access. Park at any of the meters lining Landis Avenue or on the off str
@@ -62,5 +64,35 @@ SurfspotSchema = new Schema({
     general:String, //''
   },
   image: String,
+  
 });
+SurfspotSchema.methods.locationStringify= function(){
+  let locationArray = Object.values(this.location);
+  let locationString = '';
+  for (let i = 0; i < locationArray.length; i++) {
+    let value = locationArray[i]
+    if (locationArray[i]) {
+      locationString += value
+      if (locationArray[i + 1]) {
+        locationString+=', '
+      }
+    } else {
+      locationString+=''
+    }
+    
+    
+  }
+  return locationString
+}
+SurfspotSchema.methods.coordinateConverter= function(){
+  let lat=this.coordinates.Lat
+  let lon=this.coordinates.Lon
+  let converted;
+
+  converted = new CoordinatesConv(`${lat}, ${lon}`);
+  let newLat = converted.getLatitude();
+  let newLong = converted.getLongitude();
+
+  return [newLat,newLong]
+}
 exports.Surfspot = mongoose.model("Surfspot", SurfspotSchema);
