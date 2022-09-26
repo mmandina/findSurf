@@ -1,7 +1,10 @@
 const express = require("express");
 const path = require("path");
 const app = express();
-const mongoose = require("mongoose"); //--dbpath /home/max/mongo/data
+const mongoose = require("mongoose");
+//sudo systemctl start mongod
+//sudo mongod --dbpath /home/max/mongo/data
+
 const Surfspotmodel = require("./models/ScraperSpot.js");
 const methodOverride = require("method-override");
 const Surfspot = Surfspotmodel.Surfspot;
@@ -33,6 +36,11 @@ app.get("/", async(req, res) => {
   //console.log(test.location.country);
   res.redirect("/surfspots");
 });
+app.post("/surfspots/search", asyncWrap(async (req, res) => {
+  const surfspots = await Surfspot.find({ spotName: req.body.searchText})
+  res.render("surfspots/index", { surfspots, title:"Results"})
+  //res.send(req.body);
+}));
 
 app.get("/surfspots", asyncWrap(async (req, res) => {
   const surfspots = await Surfspot.find({});
