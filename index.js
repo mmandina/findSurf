@@ -15,7 +15,7 @@ const ExpressError= require("./utilities/ExpressError")
 mongoose
   .connect("mongodb://localhost:27017/findSurf", {
     usenewUrlParser: true,
-
+ 
     useUnifiedTopology: true,
   })
   .then(() => {
@@ -37,8 +37,34 @@ app.get("/", async(req, res) => {
   res.redirect("/surfspots");
 });
 app.post("/surfspots/search", asyncWrap(async (req, res) => {
-  const surfspots = await Surfspot.find({ spotName: req.body.searchText})
-  res.render("surfspots/index", { surfspots, title:"Results"})
+  const surfspots = await Surfspot.find({
+    $or: [{
+      "spotName":
+        { $regex: new RegExp(/*"^" + */req.body.searchText.toLowerCase(), "i") }
+    },
+      {
+      "location.country":
+        { $regex: new RegExp(/*"^" + */req.body.searchText.toLowerCase(), "i") }
+      },
+      {
+        "location.Subzone1":
+          { $regex: new RegExp(/*"^" + */req.body.searchText.toLowerCase(), "i") }
+      },
+      {
+        "location.Subzone2":
+          { $regex: new RegExp(/*"^" + */req.body.searchText.toLowerCase(), "i") }
+      },
+      {
+        "location.subzone3":
+          { $regex: new RegExp(/*"^" + */req.body.searchText.toLowerCase(), "i") }
+      },
+      {
+        "location.subzone4":
+          { $regex: new RegExp(/*"^" + */req.body.searchText.toLowerCase(), "i") }
+      }
+    ]
+  });
+  res.render("surfspots/searchResult", { surfspots, title:"Results"})
   //res.send(req.body);
 }));
 

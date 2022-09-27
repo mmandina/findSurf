@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const CoordinatesConv = require('coordinate-parser');
 const Schema = mongoose.Schema;
 //https://www.wannasurf.com/spot/North_America/USA/North_East/New_Jersey/36th_Street/index.html
+//const mongoose_fuzzy_searching = require("@imranbarbhuiya/mongoose-fuzzy-searching");
+
 SurfspotSchema = new Schema({
   spotName: { //36th Street
     type: String,
@@ -95,4 +97,9 @@ SurfspotSchema.methods.coordinateConverter= function(){
 
   return [newLat,newLong]
 }
+
+
+//SurfspotSchema.plugin(mongoose_fuzzy_searching.sort, { fields: ['spotName', 'location'] })
+//SurfspotSchema.plugin(mongoose_fuzzy_searching.confidenceScore, { fields: ['spotName', 'location'] })
+//SurfspotSchema.plugin(mongoose_fuzzy_searching.default, { fields: ['spotName'] });
 exports.Surfspot = mongoose.model("Surfspot", SurfspotSchema);
