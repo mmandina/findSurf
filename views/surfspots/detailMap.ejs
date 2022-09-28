@@ -5,16 +5,11 @@
     <div class="row mb-3"><div  class="col-6 offset-3">
       <div class="card" >
         <!-- <img src="<%=spot.image%>" class="card-img-top" alt="IMG"> -->
+        
         <div class="card-body">
           <h5 class="card-title"><%= spot.spotName %></h5>
-          <p class="card-text">Description: <%= spot.info.description %></p>
-          <p class="card-text">Atmosphere: <%= spot.info.atmosphere %></p>
-          <p class="card-text">General: <%= spot.info.general %></p>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><%= spot.locationStringify() %></li>
           <%if(spot.hasCoordinates){%>
-            <li class="list-group-item"><%= spot.coordinates.Lat+"   "+spot.coordinates.Lon%>  </li>
+            
             
     <!--The div element for the map -->
     <div style= "height: 400px;
@@ -33,12 +28,55 @@
       async
       defer
     ></script>
-   
+    <li class="list-group-item mb-2"><%= spot.coordinates.Lat+"   "+spot.coordinates.Lon%>  </li>
         <% } %> 
+          <p class="card-text">Description: <%= spot.info.description %></p>
+          <p class="card-text">Atmosphere: <%= spot.info.atmosphere %></p>
+          <p class="card-text">General: <%= spot.info.general %></p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><%= spot.locationStringify() %></li>
+         
           
-          <li class="list-group-item"><%= spot.difficulty%></li>
-          <li class="list-group-item">Bottom: <%= spot.bottomcomp %></li>
-          <li class="list-group-item">Break Type: <%= spot.breaktype%></li>
+          <li class="list-group-item">
+            <h5>Surf Spot Quality</h5>
+            <p class="fw-light mb-0">Wave Quality: <%= spot.surfSpotQuality.waveQuality %> </p>
+          <p class="fw-light mb-0">Experience Level: <%= spot.surfSpotQuality.experience %> </p>
+          <p class="fw-light mb-0">Consistency: <%= spot.surfSpotQuality.frequency %></p>
+          </li>
+          
+          <li class="list-group-item">
+          <h5>Wave Characteristics</h5>
+          <p class="fw-light mb-0">Break Type: <%= spot.waveChars.type %></p>
+          <p class="fw-light mb-0">Break Direction: <%= spot.waveChars.direction %></p>
+          <p class="fw-light mb-0">Bottom Type: <%= spot.waveChars.bottom %></p>
+          <p class="fw-light mb-0">Wave Power <%= spot.waveChars.power %></p>
+          <p class="fw-light mb-0">Average Wave Length: <%= spot.waveChars.length %></p>
+          <p class="fw-light mb-0">Good Wave Length: <%= spot.waveChars.goodlength %></p>
+          </li>
+          <li class="list-group-item">
+            <h5>Ideal Environmentals: </h5>
+            <p class="fw-light mb-0">Swell Direction: <%= spot.enviroChars.swellDir %></p>
+            <p class="fw-light mb-0">Wind Direction: <%= spot.enviroChars.windDir%></p>
+            <p class="fw-light mb-0">Swell Size: <%= spot.enviroChars.swellSize %></p>
+            <p class="fw-light mb-0">Tide Position:<%= spot.enviroChars.tidePos %></p>
+            <p class="fw-light mb-0">Tide Direction: <%= spot.enviroChars.tideMov %></p>
+            </li>
+            <li class="list-group-item">
+              <h5>Access: </h5>
+              <p class="fw-light mb-0">Description: <%= spot.access.description %></p>
+              <p class="fw-light mb-0">Distance: <%= spot.access.distance%></p>
+              <p class="fw-light mb-0">Walk: <%= spot.access.walk %></p>
+              <p class="fw-light mb-0">Ease of Location: <%= spot.access.easyToFind %></p>
+              <p class="fw-light mb-0">Public Access?: <%= spot.access.publicAccess %></p>
+              <p class="fw-light mb-0">Special Access?: <%= spot.access.specialAccess %></p>
+              </li>
+            <li class="list-group-item">
+              <h5>Miscellaneous Information: </h5>
+              <p class="fw-light mb-0">Crowd During Week: <%= spot.miscDetails.weekCrowd %></p>
+              <p class="fw-light mb-0">Crowd During Weekend: <%= spot.miscDetails.weekendCrowd%></p>
+              <p class="fw-light mb-0">Dangers: <%= spot.dangers %></p>
+              </li>
         </ul>
         <div class="card-body">
           <a href="/surfspots/edit/<%=spot._id%>" class="card-link btn btn-info">Edit</a>

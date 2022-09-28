@@ -38,8 +38,8 @@ SurfspotSchema = new Schema({
       experience: String, //All Surfers
       frequency:String, //Very Consistent
     },
-  waveChars: {
-    type: String, //Sand-bar
+ waveChars: {
+  type: { type: String }, //Sand-bar
     direction: String, //right and left
     bottom: String, //Sandy
     power: String, //Ordinary, fun
