@@ -15,33 +15,11 @@
           type="text"
           name="surfspot[location]"
           id="location"
-          value="<%=spot.location%> required"
+          value="<%=spot.locationStringify()%>" required
         />
       </div>
-      <div class="mb-3">
-        <label class = "form-label" for="bottomcomp">Bottom Type</label>
-        <select class= "form-select"name="surfspot[bottomcomp]" id="bottomcomp">
-          <% for(let descriptor of surfSpotDescriptors.bottomcomp){ %>
-          <option value="<%= descriptor %>"<%=descriptor===spot.bottomcomp ? 'selected':''%>><%= descriptor %></option>
-          <% } %>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label class = "form-label" for="breaktype">Type of Break</label>
-        <select class= "form-select"name="surfspot[breaktype]" id="breaktype">
-          <% for(let descriptor of surfSpotDescriptors.breaktypes){ %>
-          <option value="<%= descriptor %>"<%=descriptor===spot.breaktype ? 'selected':''%>><%= descriptor %></option>
-          <% } %>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label class = "form-label" for="difficulty">Difficulty</label>
-        <select class= "form-select"name="surfspot[difficulty]" id="difficulty">
-          <% for(let descriptor of surfSpotDescriptors.difficulties){ %>
-          <option value="<%= descriptor %>"<%=descriptor===spot.difficulty? 'selected':''%>><%= descriptor %></option>
-          <% } %>
-        </select>
-      </div>
+      
+    
       <div class="mb-3">
         <label class = "form-label" for="description">Description</label>
         <textarea class="form-control"
