@@ -1,3 +1,7 @@
 /node_modules
 seeds/Scraped.js
 seeds/dump/wannaSurf/surfspot.bson
+findSurfSpotDb/wannaSurf/surfspot.metadata.json
+findSurfSpotDb/wannaSurf/2022_06_09__00_00wannasurf.json
+findSurfSpotDb/wannaSurf/surfspot.bson
+connectString.js

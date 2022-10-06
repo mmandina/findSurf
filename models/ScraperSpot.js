@@ -102,4 +102,4 @@ SurfspotSchema.methods.coordinateConverter= function(){
 //SurfspotSchema.plugin(mongoose_fuzzy_searching.sort, { fields: ['spotName', 'location'] })
 //SurfspotSchema.plugin(mongoose_fuzzy_searching.confidenceScore, { fields: ['spotName', 'location'] })
 //SurfspotSchema.plugin(mongoose_fuzzy_searching.default, { fields: ['spotName'] });
-exports.Surfspot = mongoose.model("Surfspot", SurfspotSchema);
+exports.Surfspot = mongoose.model("surfspot", SurfspotSchema);

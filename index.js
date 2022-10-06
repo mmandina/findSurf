@@ -11,10 +11,12 @@ const Surfspot = Surfspotmodel.Surfspot;
 const surfSpotDescriptors=Surfspotmodel.surfSpotDescriptors
 const asyncWrap = require("./utilities/asyncWrap")
 const ExpressError= require("./utilities/ExpressError")
-
+const URI=require("./connectString").connectString
+//const URI=connectURI.connectString
 mongoose
-  .connect("mongodb://localhost:27017/findSurf", {
-    usenewUrlParser: true,
+  .connect(URI, {
+    // dbName: "findSurf",
+  usenewUrlParser: true,
  
     useUnifiedTopology: true,
   })
@@ -70,6 +72,7 @@ app.post("/surfspots/search", asyncWrap(async (req, res) => {
 
 app.get("/surfspots", asyncWrap(async (req, res) => {
   const surfspots = await Surfspot.find({});
+  console.log(surfspots)
   res.render("surfspots/index", { surfspots, title: "Surfspot Index" });
 }));
 app.get("/surfspots/new", (req, res) => {
