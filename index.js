@@ -4,7 +4,7 @@ const app = express();
 const mongoose = require("mongoose");
 //sudo systemctl start mongod
 //sudo mongod --dbpath /home/max/mongo/data
-
+//tests
 const Surfspotmodel = require("./models/ScraperSpot.js");
 const methodOverride = require("method-override");
 const Surfspot = Surfspotmodel.Surfspot;
