@@ -5,3 +5,4 @@ findSurfSpotDb/wannaSurf/surfspot.metadata.json
 findSurfSpotDb/wannaSurf/2022_06_09__00_00wannasurf.json
 findSurfSpotDb/wannaSurf/surfspot.bson
 connectString.js
+mapsAPIKey.js

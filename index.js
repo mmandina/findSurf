@@ -12,6 +12,9 @@ const surfSpotDescriptors=Surfspotmodel.surfSpotDescriptors
 const asyncWrap = require("./utilities/asyncWrap")
 const ExpressError= require("./utilities/ExpressError")
 const URI=require("./connectString").connectString
+const mapsApiKey=require('./mapsAPIKey').mapsAPIKey
+
+
 //const URI=connectURI.connectString
 mongoose
   .connect(URI, {
@@ -71,8 +74,7 @@ app.post("/surfspots/search", asyncWrap(async (req, res) => {
 }));
 
 app.get("/surfspots", asyncWrap(async (req, res) => {
-  const surfspots = await Surfspot.find({});
-  console.log(surfspots)
+  const surfspots = await Surfspot.find({}).limit(11);
   res.render("surfspots/index", { surfspots, title: "Surfspot Index" });
 }));
 app.get("/surfspots/new", (req, res) => {
@@ -99,7 +101,7 @@ app.put("/surfspots/edit/:id/", asyncWrap(async (req, res) => {
 app.get("/surfspots/detail/:id", asyncWrap(async (req, res) => {
   const spotId = req.params.id;
   const spot = await Surfspot.findById(spotId);
-  res.render("surfspots/detailMap", { spot, title: `${spot.title}` });
+  res.render("surfspots/detailMap", { spot, title: `${spot.title}`,apiKey:mapsApiKey });
 }));
 app.delete("/surfspots/:id", asyncWrap(async (req, res) => {
   const spotId = req.params.id;
