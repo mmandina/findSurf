@@ -129,7 +129,9 @@ app.put(
       spotId,
       req.body.surfspot
     );
+
     res.redirect(`/surfspots/detail/${updatedSpot._id}`);
+    // res.send(req.body.surfspot);
   })
 );
 app.get(

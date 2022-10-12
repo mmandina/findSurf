@@ -1,41 +1,323 @@
 <%- include('partials/head') %>
 
     <%- include('partials/navbar.ejs') %> 
+    <!-- TODO: check required fields, validation, error catching-->
     <main class="row">
     <h1 class="text-center">Edit Spot: <%= spot.title%> </h1>
     <div class="col-6 offset-3">
     <form action="/surfspots/edit/<%= spot._id %>?_method=PUT" method="POST" novalidate class="validate">
       <div class="mb-3">
         <label class = "form-label" for="title">Spot Name</label>
-        <input class="form-control" type="text" name="surfspot[title]" id="title" value="<%=spot.title %>" required />
+        <input class="form-control" type="text" name="surfspot[spotName]" id="title" value="<%=spot.spotName %>" required />
       </div>
-      <div class="mb-3">
-        <label class = "form-label" for="location">Location</label>
+      <div class="row ">
+        <div class="col-md-4 mb-3"> <label class = "form-label" for="locationCountry">Distance from Access</label>
+         <input class='form-control'
+           type="text"
+           name="surfspot[location][country]"
+           id="locationCountry"
+           placeholder="USA, Australia, France..."
+           value="<%=spot.location.country%>"
+         /></div>
+         <div class="col-md-4 mb-3"> <label class = "form-label" for="locationSubzone1">Subzone 1</label>
+          <input class='form-control'
+            type="text"
+            name="surfspot[location][Subzone1]"
+            id="locationSubzone1"
+            placeholder=""
+            value="<%=spot.location.Subzone1%>"
+          /></div>
+          <div class="col-md-4 mb-3"> <label class = "form-label" for="locationSubzone1">Subzone 2</label>
+            <input class='form-control'
+              type="text"
+              name="surfspot[location][Subzone2]"
+              id="locationSubzone2"
+              placeholder=""
+              value="<%=spot.location.Subzone2%>"
+            /></div>
+          </div>
+          <div class="row ">
+            <div class="col-md-4 mb-3"> <label class = "form-label" for="locationSubzone3">Subzone 3</label>
+              <input class='form-control'
+                type="text"
+                name="surfspot[location][subzone3]"
+                id="locationSubzone3"
+                placeholder=""
+                value="<%=spot.location.subzone3%>"
+              /></div>
+              <div class="col-md-4 mb-3"> <label class = "form-label" for="locationSubzone4">Subzone 4</label>
+                <input class='form-control'
+                  type="text"
+                  name="surfspot[location][subzone4]"
+                  id="locationSubzone4"
+                  placeholder=""
+                  value="<%=spot.location.subzone4%>"
+                /></div>
+           </div>
+      <div class="row mb-3">
+       <div class="col-md-6"> <label class = "form-label" for="latitude">Latitude</label>
         <input class='form-control'
           type="text"
-          name="surfspot[location]"
-          id="location"
-          value="<%=spot.locationStringify()%>" required
-        />
+          name="surfspot[coordinates][Lat]"
+          id="latitude"
+          value="<%=spot.coordinates.Lat%>" 
+        /></div>
+        <div class="col-md-6">
+        <label class = "form-label" for="longitude">Longitude</label>
+        <input class='form-control'
+          type="text"
+          name="surfspot[coordinates][Lon]"
+          id="longitude"
+          value="<%=spot.coordinates.Lon%>" 
+        /></div>
       </div>
-      
-    
-      <div class="mb-3">
-        <label class = "form-label" for="description">Description</label>
+      <div class="mt-3 mb-6">
+        <label class = "form-label" for="infoDescription">Description</label>
         <textarea class="form-control"
           type="text"
-          name="surfspot[description]"
-          id="description" required
-          ><%=spot.description%></textarea>
+          name="surfspot[info][description]"
+          id="infoDescription" required
+          ><%=spot.info.description%></textarea>
       </div>
+      <div class="mt-3 mb-6">
+        <label class = "form-label" for="infoAtmosphere">Atmosphere</label>
+        <textarea class="form-control"
+          type="text"
+          name="surfspot[info][atmosphere]"
+          id="infoAtmosphere"
+          ><%=spot.info.atmosphere%></textarea>
+      </div>
+      <div class="mt-3 mb-6">
+        <label class = "form-label" for="infoGeneral">General Spot Info</label>
+        <textarea class="form-control"
+          type="text"
+          name="surfspot[info][general]"
+          id="infoGeneral"
+          ><%=spot.info.general%></textarea>
+      </div>
+      <div class="mb-3 mt-3 text-center"><b>Access</b></div>
       <div class="mb-3">
+        <label class = "form-label" for="accessDescription">Access Description</label>
+        <textarea class='form-control'
+          type="text"
+          name="surfspot[access][description]"
+          id="accessDescription"
+        ><%=spot.access.description%></textarea>
+      </div>
+      <div class="row ">
+        <div class="col-md-4 mb-3"> <label class = "form-label" for="accessDistance">Distance from Access</label>
+         <input class='form-control'
+           type="text"
+           name="surfspot[access][distance]"
+           id="accessDistance"
+           placeholder="In Minutes"
+           value="<%=spot.access.distance%>"
+         /></div>
+         <div class="col-md-4 mb-3"> <label class = "form-label" for="accessWalk">Walkable?</label>
+          <input class='form-control'
+            type="text"
+            name="surfspot[access][walk]"
+            id="accessWalk"
+            placeholder="Yes or No"
+            value="<%=spot.access.walk%>"
+          /></div>
+          <div class="col-md-4 mb-3"> <label class = "form-label" for="accessEasyToFind">Easy to Find?</label>
+            <input class='form-control'
+              type="text"
+              name="surfspot[access][easyToFind]"
+              id="accessEasyToFind"
+              placeholder=""
+              value="<%=spot.access.easyToFind%>"
+            /></div>
+          </div>
+       <div class="row ">
+        <div class="col-md-6 mb-3"> <label class = "form-label" for="accessPublicAccess">Public Access?</label>
+         <input class='form-control'
+           type="text"
+           name="surfspot[access][publicAccess]"
+           id="accessPublicAccess"
+           placeholder="Yes or No"
+           value="<%=spot.access.publicAccess%>"
+         /></div>
+         <div class="col-md-6 mb-3"> <label class = "form-label" for="accessSpecialAccess">Special Access?</label>
+          <input class='form-control'
+            type="text"
+            name="surfspot[access][specialAccess]"
+            id="accessSpecialAccess"
+            placeholder="Explain"
+            value="<%=spot.access.specialAccess%>"
+          /></div> 
+       </div>
+       <div class="mb-3 text-center"><b>Spot Quality</b></div>
+       <div class="row ">
+        <div class="col-md-4 mb-3"> <label class = "form-label" for="surfSpotQualityWaveQuality">Wave Quality</label>
+         <input class='form-control'
+           type="text"
+           name="surfspot[surfSpotQuality][waveQuality]"
+           id="surfSpotQualityWaveQuality"
+           placeholder="World-Class, Good, Okay..."
+           value="<%=spot.surfSpotQuality.waveQuality%>"
+         /></div>
+         <div class="col-md-4 mb-3"> <label class = "form-label" for="surfSpotQualityExperience">Surfer Experience</label>
+          <input class='form-control'
+            type="text"
+            name="surfspot[surfSpotQuality][experience]"
+            id="surfSpotQualityExperience"
+            placeholder="Pro, Expert, Intermediate..."
+            value="<%=spot.surfSpotQuality.experience%>"
+          /></div>
+          <div class="col-md-4 mb-3"> <label class = "form-label" for="surfSpotQualityfrequency">Spot Consistency</label>
+            <input class='form-control'
+              type="text"
+              name="surfspot[surfSpotQuality][frequency]"
+              id="surfSpotQualityfrequency"
+              placeholder="Very Consistent, Consistent, Rare..."
+              value="<%=spot.surfSpotQuality.frequency%>"
+            /></div>
+       </div>
+       <div class="row ">
+        <div class="mb-3 text-center"><b>Spot Characteristics</b></div>
+        <div class="col-md-4 mb-3"> <label class = "form-label" for="waveCharsType">Type of Break</label>
+         <input class='form-control'
+           type="text"
+           name="surfspot[waveChars][type]"
+           id="waveCharsType"
+           placeholder="Reef, Beach, Point..."
+           value="<%=spot.waveChars.type%>"
+         /></div>
+         <div class="col-md-4 mb-3"> <label class = "form-label" for="waveCharsDirection">Break Direction</label>
+          <input class='form-control'
+            type="text"
+            name="surfspot[waveChars][direction]"
+            id="waveCharsDirection"
+            placeholder="Left, Right, A-Frame..."
+            value="<%=spot.waveChars.type%>"
+          /></div>
+          <div class="col-md-4 mb-3"> <label class = "form-label" for="waveCharsBottom">Bottom Composition</label>
+            <input class='form-control'
+              type="text"
+              name="surfspot[waveChars][bottom]"
+              id="waveCharsBottom"
+              placeholder="Sandy, Reef, Rock..."
+              value="<%=spot.waveChars.bottom%>"
+            /></div>
+       </div>
+       <div class="row ">
+        <div class="col-md-4 mb-3"> <label class = "form-label" for="waveCharsPower">Wave Power</label>
+         <input class='form-control'
+           type="text"
+           name="surfspot[waveChars][power]"
+           id="waveCharsPower"
+           placeholder="Strong, Medium, Weak..."
+           value="<%=spot.waveChars.power%>"
+         /></div>
+         <div class="col-md-4 mb-3"> <label class = "form-label" for="waveCharsLength">Typical Ride Length</label>
+          <input class='form-control'
+            type="text"
+            name="surfspot[waveChars][length]"
+            id="waveCharsLength"
+            placeholder="In Feet"
+            value="<%=spot.waveChars.length%>"
+          /></div>
+          <div class="col-md-4 mb-3"> <label class = "form-label" for="waveCharsGoodLength">Good Ride Length</label>
+            <input class='form-control'
+              type="text"
+              name="surfspot[waveChars][goodlength]"
+              id="waveCharsGoodLength"
+              placeholder="In Feet"
+              value="<%=spot.waveChars.goodlength%>"
+            /></div>
+       </div>
+       <div class="row ">
+        <div class="mb-3 text-center"><b>Optimal Environmental Conditions</b></div>
+        <div class="col-md-4 mb-3"> <label class = "form-label" for="enviroCharsSwellDir">Swell Direction</label>
+         <input class='form-control'
+           type="text"
+           name="surfspot[enviroChars][swellDir]"
+           id="enviroCharsSwellDir"
+           placeholder="North, North East, East..."
+           value="<%=spot.enviroChars.swellDir%>"
+         /></div>
+         <div class="col-md-4 mb-3"> <label class = "form-label" for="enviroCharsWindDir">Wind Direction</label>
+          <input class='form-control'
+            type="text"
+            name="surfspot[enviroChars][windDir]"
+            id="enviroCharsWindDir"
+            placeholder="North, North East, East..."
+            value="<%=spot.enviroChars.windDir%>"
+          /></div>
+          <div class="col-md-4 mb-3"> <label class = "form-label" for="enviroCharsSwellSize">Swell Size</label>
+            <input class='form-control'
+              type="text"
+              name="surfspot[enviroChars][swellSize]"
+              id="enviroCharsSwellSize"
+              placeholder="1-3 ft, 5-6 ft, 6+ ft..."
+              value="<%=spot.enviroChars.swellSize%>"
+            /></div>
+       </div>
+       <div class="row ">
+        <div class="col-md-6 mb-3"> <label class = "form-label" for="enviroCharsTidePos">Tide Position</label>
+         <input class='form-control'
+           type="text"
+           name="surfspot[enviroChars][tidePos]"
+           id="enviroCharsTidePos"
+           placeholder="High, Mid, Mid + Low..."
+           value="<%=spot.enviroChars.tidePos%>"
+         /></div>
+         <div class="col-md-6 mb-3"> <label class = "form-label" for="enviroCharsTideMov">Tide Movement</label>
+          <input class='form-control'
+            type="text"
+            name="surfspot[enviroChars][tideMov]"
+            id="enviroCharsTideMov"
+            placeholder="Rising, Falling, Rising and Falling..."
+            value="<%=spot.enviroChars.tideMov%>"
+          /></div>
+       </div>
+       <div class="row ">
+        <div class="mb-3 text-center"><b>Miscellaneous Details</b></div>
+        <div class="col-md-4 mb-3"> <label class = "form-label" for="miscDetailsWeekCrowd">Weekday Crowd</label>
+         <input class='form-control'
+           type="text"
+           name="surfspot[miscDetails][weekCrowd]"
+           id="miscDetailssWeekCrowd"
+           placeholder="Heavy, Moderate, Light..."
+           value="<%=spot.miscDetails.weekCrowd%>"
+         /></div>
+         <div class="col-md-4 mb-3"> <label class = "form-label" for="miscDetailsWeekendCrowd">Weekend Crowd</label>
+          <input class='form-control'
+            type="text"
+            name="surfspot[miscDetails][weekendCrowd]"
+            id="miscDetailsWeekendCrowd"
+            placeholder="Heavy, Moderate, Light..."
+            value="<%=spot.miscDetails.weekendCrowd%>"
+          /></div>
+         <div class="col-md-4 mb-3"> <label class = "form-label" for="miscDetailsWebcamUrl">Webcam URL</label>
+          <input class='form-control'
+            type="text"
+            name="surfspot[miscDetails][webcamUrl]"
+            id="miscDetailsWebcamUrl"
+            placeholder="www.surfcamz.com/thisspot"
+            value="<%=spot.miscDetails.webcamUrl%>"
+          /></div>
+       </div>
+       <div class="mb-3">
+        <label class = "form-label" for="dangers">Dangers</label>
+        <textarea class='form-control'
+          type="text"
+          name="surfspot[dangers]"
+          id="dangers"
+          value="" 
+        ><%=spot.dangers%></textarea>
+      </div>
+      <div class="mb-3 mt-3">
         <label class ="form-label" for="image">Image URL</label>
-        <input class="form-control"type="text" name="surfspot[image]" id="image" value="<%=spot.image%>"required/>
+        <input class="form-control"type="text" name="surfspot[image]" id="image" value="<%=spot.image%>"/>
       </div>
       <button class="btn btn-primary mb-3">Submit Changes</button>
     </form>
     <a class="btn btn-secondary mb-3"href="/surfspots/">Back to All Spots</a>
   </div>
   </main>
-  <script src="/formValidate.js"></script>
+  <!--<script src="/formValidate.js"></script>  Need to refactor validation scripts to account for new fields in Edit/New-->
+  
 <%-include('partials/footer')%>

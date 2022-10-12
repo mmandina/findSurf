@@ -16,6 +16,7 @@ SurfspotSchema = new Schema({
     Subzone2: String, //New Jersey
     subzone3: String, //''
     subzone4: String, //''
+    longFormLocation: String, //For new Submissions
   },
 
   hasCoordinates: {

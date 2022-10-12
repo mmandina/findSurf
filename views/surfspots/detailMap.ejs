@@ -35,8 +35,11 @@
           <p class="card-text">General: <%= spot.info.general %></p>
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item"><%= spot.locationStringify() %></li>
-         
+          <%if(spot.locationStringify()!==''){%>
+          <li class="list-group-item">Location: <%= spot.locationStringify()%> </li>
+         <% }else{ %>
+           <li class="list-group-item">Location: 1<%= spot.location.longFormLocation%> </li>
+         <%} %> 
           
           <li class="list-group-item">
             <h5>Surf Spot Quality</h5>
