@@ -150,7 +150,8 @@ app.get(
   "/surfspots/mainmap",
   asyncWrap(async (req, res) => {
     const surfspotsForMap = await Surfspot.find({ hasCoordinates: true });
-    const cleanedSurfSpots = await surfspotsForMainMap(surfspotsForMap);
+    let cleanedSurfSpots = await surfspotsForMainMap(surfspotsForMap);
+    cleanedSurfSpots = JSON.stringify(cleanedSurfSpots);
     //console.log(cleanedSurfSpots);
     const spotId = req.params.id;
     //const spot = await Surfspot.findById(spotId);
