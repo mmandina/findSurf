@@ -10,7 +10,7 @@ const asyncWrap = require("./utilities/asyncWrap");
 const ExpressError = require("./utilities/ExpressError");
 const URI = require("./connectString").connectString;
 const mapsApiKey = require("./mapsAPIKey").mapsAPIKey;
-
+const surfspotsForMainMap = require("./utilities/surfspotsForMainMap");
 mongoose
   .connect(URI, {
     // dbName: "findSurf",
@@ -142,6 +142,20 @@ app.get(
     res.render("surfspots/detailMap", {
       spot,
       title: `${spot.title}`,
+      apiKey: mapsApiKey,
+    });
+  })
+);
+app.get(
+  "/surfspots/mainmap",
+  asyncWrap(async (req, res) => {
+    const surfspotsForMap = await Surfspot.find({ hasCoordinates: true });
+    const cleanedSurfSpots = await surfspotsForMainMap(surfspotsForMap);
+    //console.log(cleanedSurfSpots);
+    const spotId = req.params.id;
+    //const spot = await Surfspot.findById(spotId);
+    res.render("surfspots/mainmap", {
+      cleanedSurfSpots,
       apiKey: mapsApiKey,
     });
   })
