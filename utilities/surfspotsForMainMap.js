@@ -11,7 +11,8 @@ async function surfspotsForMainMap(surfspots) {
     spot.id = spots._id.toString();
     spot.spotName = spots.spotName;
     spot.location = locationStringify(spots);
-
+    spot.description = spots.info.description;
+    spot.experience = spots.surfSpotQuality.experience;
     spotCoordsIdsNames.push(spot);
   }
   return spotCoordsIdsNames;
