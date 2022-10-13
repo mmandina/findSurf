@@ -1,10 +1,10 @@
 // Initialize and add the map
-
+//TODO: Infoboxes, ad _id to cleaned spots for linking purposes
 async function initMap() {
   let script_tag = document.getElementById("mapsId");
   //var pos = script_tag.getAttribute("Pos");
   let cleanSurfspots = JSON.parse(script_tag.getAttribute("surfspotsForMap"));
-
+  console.log(cleanSurfspots);
   /*we get here if the string is not valid coordinates or format is inconsistent between lat and long*/
   const spot = {
     lat: 0,

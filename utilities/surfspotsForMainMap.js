@@ -5,17 +5,19 @@ async function surfspotsForMainMap(surfspots) {
 
   for (let spots of surfspots) {
     let spot = {};
-    spot.Lat = coordinateConverterLat(spots);
-    spot.Long = coordinateConverterLong(spots);
+    let coordinate = coordinateConverter(spots);
+    spot.Lat = coordinate[0];
+    spot.Long = coordinate[1];
+    spot.id = spots._id.toString();
     spot.spotName = spots.spotName;
-    //spot.location = spots.locationStringify();
+    spot.location = locationStringify(spots);
 
     spotCoordsIdsNames.push(spot);
   }
-  //console.log(spotCoordsIdsNames);
   return spotCoordsIdsNames;
 }
-let coordinateConverterLat = function (spot) {
+
+let coordinateConverter = function (spot) {
   let lat = spot.coordinates.Lat;
   let lon = spot.coordinates.Lon;
   let converted;
@@ -24,17 +26,22 @@ let coordinateConverterLat = function (spot) {
   let newLat = converted.getLatitude();
   let newLong = converted.getLongitude();
 
-  return newLat;
+  return [newLat, newLong];
 };
-let coordinateConverterLong = function (spot) {
-  let lat = spot.coordinates.Lat;
-  let lon = spot.coordinates.Lon;
-  let converted;
-
-  converted = new CoordinatesConv(`${lat}, ${lon}`);
-  let newLat = converted.getLatitude();
-  let newLong = converted.getLongitude();
-
-  return newLong;
+locationStringify = function (spot) {
+  let locationArray = Object.values(spot.location);
+  let locationString = "";
+  for (let i = 0; i < locationArray.length; i++) {
+    let value = locationArray[i];
+    if (locationArray[i]) {
+      locationString += value;
+      if (locationArray[i + 1]) {
+        locationString += ", ";
+      }
+    } else {
+      locationString += "";
+    }
+  }
+  return locationString;
 };
 module.exports = surfspotsForMainMap;
