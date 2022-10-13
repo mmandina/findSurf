@@ -91,7 +91,6 @@ app.post(
       ],
     });
     res.render("surfspots/searchResult", { surfspots, title: "Results" });
-    //res.send(req.body);
   })
 );
 
@@ -131,7 +130,6 @@ app.put(
     );
 
     res.redirect(`/surfspots/detail/${updatedSpot._id}`);
-    // res.send(req.body.surfspot);
   })
 );
 app.get(
@@ -152,9 +150,9 @@ app.get(
     const surfspotsForMap = await Surfspot.find({ hasCoordinates: true });
     let cleanedSurfSpots = await surfspotsForMainMap(surfspotsForMap);
     cleanedSurfSpots = JSON.stringify(cleanedSurfSpots);
-    //console.log(cleanedSurfSpots);
+
     const spotId = req.params.id;
-    //const spot = await Surfspot.findById(spotId);
+
     res.render("surfspots/mainmap", {
       cleanedSurfSpots,
       apiKey: mapsApiKey,
