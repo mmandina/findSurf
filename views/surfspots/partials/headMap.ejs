@@ -7,7 +7,7 @@
     <title><%= spot.spotName %></title>
     <script src="/bootstrap.bundle.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script id="mapsId" Lat="<%=spot.coordinateConverter()%>"  src="/maps.js"></script>
+    <script id="mapsId" Lat=" <%if(spot.hasCoordinates){%><%=spot.coordinateConverter()%><%}%>"  src="/maps.js"></script>
     <link rel="stylesheet" href="/bootstrap.min.css" />
   </head>
 </html>

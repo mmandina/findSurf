@@ -13,9 +13,7 @@ const mapsApiKey = require("./mapsAPIKey").mapsAPIKey;
 const surfspotsForMainMap = require("./utilities/surfspotsForMainMap");
 mongoose
   .connect(URI, {
-    // dbName: "findSurf",
     usenewUrlParser: true,
-
     useUnifiedTopology: true,
   })
   .then(() => {
@@ -35,6 +33,7 @@ app.get("/", async (req, res) => {
   const test = await Surfspot.findOne();
   res.redirect("/surfspots");
 });
+
 app.post(
   "/surfspots/search",
   asyncWrap(async (req, res) => {
@@ -101,12 +100,14 @@ app.get(
     res.render("surfspots/index", { surfspots, title: "Surfspot Index" });
   })
 );
+
 app.get("/surfspots/new", (req, res) => {
   res.render("surfspots/new", {
     surfSpotDescriptors,
     title: "Submit New Surfspot",
   });
 });
+
 app.get(
   "/surfspots/edit/:id",
   asyncWrap(async (req, res) => {
@@ -128,10 +129,10 @@ app.put(
       spotId,
       req.body.surfspot
     );
-
     res.redirect(`/surfspots/detail/${updatedSpot._id}`);
   })
 );
+
 app.get(
   "/surfspots/detail/:id",
   asyncWrap(async (req, res) => {
@@ -144,21 +145,20 @@ app.get(
     });
   })
 );
+
 app.get(
   "/surfspots/mainmap",
   asyncWrap(async (req, res) => {
     const surfspotsForMap = await Surfspot.find({ hasCoordinates: true });
     let cleanedSurfSpots = await surfspotsForMainMap(surfspotsForMap);
     cleanedSurfSpots = JSON.stringify(cleanedSurfSpots);
-
-    const spotId = req.params.id;
-
     res.render("surfspots/mainmap", {
       cleanedSurfSpots,
       apiKey: mapsApiKey,
     });
   })
 );
+
 app.delete(
   "/surfspots/:id",
   asyncWrap(async (req, res) => {
@@ -167,6 +167,7 @@ app.delete(
     res.redirect("/surfspots/");
   })
 );
+
 app.post(
   "/surfspots/",
   asyncWrap(async (req, res) => {
@@ -175,13 +176,16 @@ app.post(
     res.redirect("/surfspots");
   })
 );
+
 app.all("*", (req, res, next) => {
   next(new ExpressError("PAGE NOT FOUND", 404));
 });
+
 app.use((err, req, res, next) => {
   const { status = 500, message = "ERROR" } = err;
   res.status(status).send(message);
 });
+
 app.listen(3000, () => {
-  console.log("serving port 3000");
+  console.log("Serving Port: 3000");
 });

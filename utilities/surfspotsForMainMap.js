@@ -2,7 +2,6 @@ const CoordinatesConv = require("coordinate-parser");
 
 async function surfspotsForMainMap(surfspots) {
   let spotCoordsIdsNames = [];
-
   for (let spots of surfspots) {
     let spot = {};
     let coordinate = coordinateConverter(spots);
@@ -18,7 +17,7 @@ async function surfspotsForMainMap(surfspots) {
   return spotCoordsIdsNames;
 }
 
-let coordinateConverter = function (spot) {
+coordinateConverter = function (spot) {
   let lat = spot.coordinates.Lat;
   let lon = spot.coordinates.Lon;
   let converted;
@@ -30,19 +29,21 @@ let coordinateConverter = function (spot) {
   return [newLat, newLong];
 };
 locationStringify = function (spot) {
-  let locationArray = Object.values(spot.location);
-  let locationString = "";
-  for (let i = 0; i < locationArray.length; i++) {
-    let value = locationArray[i];
-    if (locationArray[i]) {
-      locationString += value;
-      if (locationArray[i + 1]) {
-        locationString += ", ";
+  if (this.hasCoordinates) {
+    let locationArray = Object.values(spot.location);
+    let locationString = "";
+    for (let i = 0; i < locationArray.length; i++) {
+      let value = locationArray[i];
+      if (locationArray[i]) {
+        locationString += value;
+        if (locationArray[i + 1]) {
+          locationString += ", ";
+        }
+      } else {
+        locationString += "";
       }
-    } else {
-      locationString += "";
     }
-  }
-  return locationString;
+    return locationString;
+  } else return "";
 };
 module.exports = surfspotsForMainMap;

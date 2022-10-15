@@ -9,14 +9,17 @@ async function initMap() {
     lat: 0,
     lng: 0,
   };
+
   // The map, centered at the surfSpot
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 3,
     center: spot,
     mapTypeId: "hybrid",
   });
+
   let windowAlreadyOpen = false;
   let lastWindow;
+
   //The markers, positioned at the surfSpots
   for (let i = 0; i < cleanSurfspots.length; i++) {
     const pos = {

@@ -1,5 +1,4 @@
 // Initialize and add the map
-console.log("TEST");
 function initMap() {
   var script_tag = document.getElementById("mapsId");
   var lat = script_tag.getAttribute("Lat");
