@@ -192,6 +192,6 @@ app.use((err, req, res, next) => {
   res.status(status).send(message);
 });
 
-app.listen(3000, () => {
-  console.log("Serving Port: 3000");
+app.listen(process.env.PORT, () => {
+  console.log("Serving Port: " + process.env.PORT);
 });
