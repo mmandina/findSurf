@@ -12,7 +12,6 @@ const URI = require("./connectString").connectString;
 const mapsApiKey = require("./mapsAPIKey").mapsAPIKey;
 //const URI = process.env.mongoDBKey;
 //const mapsApiKey = process.env.mapsAPIKey;
-console.log(URI);
 const surfspotsForMainMap = require("./utilities/surfspotsForMainMap");
 mongoose
   .connect(
@@ -153,12 +152,12 @@ app.get(
 );
 
 app.get(
-  "/surfspots/mainmap",
+  "/surfspots/mainMap",
   asyncWrap(async (req, res) => {
     const surfspotsForMap = await Surfspot.find({ hasCoordinates: true });
     let cleanedSurfSpots = await surfspotsForMainMap(surfspotsForMap);
     cleanedSurfSpots = JSON.stringify(cleanedSurfSpots);
-    res.render("surfspots/mainmap", {
+    res.render("surfspots/mainMap", {
       cleanedSurfSpots,
       apiKey: mapsApiKey,
     });
