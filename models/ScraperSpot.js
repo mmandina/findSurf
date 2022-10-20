@@ -97,4 +97,4 @@ SurfspotSchema.methods.coordinateConverter = function () {
   return [newLat, newLong];
 };
 
-exports.Surfspot = mongoose.model("surfspot", SurfspotSchema);
+exports.Surfspot = mongoose.model("surfspotactive", SurfspotSchema);
