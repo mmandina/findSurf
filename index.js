@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(favicon("./favicon.ico"));
 app.get("/", async (req, res) => {
   const test = await Surfspot.findOne();
-  res.redirect("/surfspots");
+  res.redirect("/surfspots/mainMap");
 });
 
 app.post(
@@ -100,7 +100,10 @@ app.get(
   "/surfspots",
   asyncWrap(async (req, res) => {
     const surfspots = await Surfspot.find({}).limit(11);
-    res.render("surfspots/index", { surfspots, title: "Surfspot Index" });
+    res.render("surfspots/index", {
+      surfspots,
+      title: "findSurf - Surfspot Index",
+    });
   })
 );
 
@@ -119,7 +122,7 @@ app.get(
     res.render("surfspots/edit", {
       spot,
       surfSpotDescriptors,
-      title: `Edit Spot: ${spot.title}`,
+      title: `findSurf - Edit Spot: ${spot.title}`,
     });
   })
 );
@@ -143,7 +146,7 @@ app.get(
     const spot = await Surfspot.findById(spotId);
     res.render("surfspots/detailMap", {
       spot,
-      title: `${spot.title}`,
+      title: `findSurf - ${spot.title}`,
       apiKey: mapsApiKey,
     });
   })
