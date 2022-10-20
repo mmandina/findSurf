@@ -11,7 +11,8 @@ const ExpressError = require("./utilities/ExpressError");
 //const URI = require("./connectString").connectString;
 //const mapsApiKey = require("./mapsAPIKey").mapsAPIKey;
 const URI = process.env.mongoDBKey;
-const mapsAPIKey = process.env.mapsAPIKey;
+const mapsApiKey = process.env.mapsAPIKey;
+console.log(URI);
 const surfspotsForMainMap = require("./utilities/surfspotsForMainMap");
 mongoose
   .connect(URI, {
