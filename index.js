@@ -8,10 +8,10 @@ const Surfspot = Surfspotmodel.Surfspot;
 const surfSpotDescriptors = Surfspotmodel.surfSpotDescriptors;
 const asyncWrap = require("./utilities/asyncWrap");
 const ExpressError = require("./utilities/ExpressError");
-//const URI = require("./connectString").connectString;
-//const mapsApiKey = require("./mapsAPIKey").mapsAPIKey;
-const URI = process.env.mongoDBKey;
-const mapsApiKey = process.env.mapsAPIKey;
+const URI = require("./connectString").connectString;
+const mapsApiKey = require("./mapsAPIKey").mapsAPIKey;
+//const URI = process.env.mongoDBKey;
+//const mapsApiKey = process.env.mapsAPIKey;
 console.log(URI);
 const surfspotsForMainMap = require("./utilities/surfspotsForMainMap");
 mongoose
