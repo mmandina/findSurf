@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const app = express();
+const favicon = require("serve-favicon");
 const mongoose = require("mongoose");
 const Surfspotmodel = require("./models/ScraperSpot.js");
 const methodOverride = require("method-override");
@@ -30,7 +31,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static("public"));
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
-
+app.use(favicon("/favicon.ico"));
 app.get("/", async (req, res) => {
   const test = await Surfspot.findOne();
   res.redirect("/surfspots");

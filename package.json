@@ -1,4 +1,3 @@
-
 {
   "name": "findSurf",
   "version": "1.0.0",
@@ -9,7 +8,6 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-    
   },
   "author": "Maxwell Mandina",
   "license": "ISC",
@@ -32,7 +30,7 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^7.1.2",
     "react-dom": "^18.1.0",
+    "serve-favicon": "^2.5.0",
     "uuid": "^8.3.2"
   }
-  
 }
