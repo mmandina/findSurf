@@ -14,13 +14,10 @@ const mapsApiKey = require("./mapsAPIKey").mapsAPIKey;
 //const mapsApiKey = process.env.mapsAPIKey;
 const surfspotsForMainMap = require("./utilities/surfspotsForMainMap");
 mongoose
-  .connect(
-    "mongodb+srv://heroku:6piPGCO1KbuNqr0E@cluster0.ivehbdn.mongodb.net/findSurf?retryWrites=true&w=majority",
-    {
-      usenewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(URI, {
+    usenewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("Mongo Connected");
   })
