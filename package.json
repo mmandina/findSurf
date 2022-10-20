@@ -1,12 +1,16 @@
+
 {
-  "name": "projecttemp",
+  "name": "findSurf",
   "version": "1.0.0",
-  "description": "",
+  "description": "Surf Atlas",
   "main": "index.js",
+  "engines": {
+    "node": "16.17.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Maxwell Mandina",
   "license": "ISC",
   "dependencies": {
     "@imranbarbhuiya/mongoose-fuzzy-searching": "^3.0.5",
