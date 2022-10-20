@@ -8,8 +8,8 @@
     "node": "16.x"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+    
   },
   "author": "Maxwell Mandina",
   "license": "ISC",
