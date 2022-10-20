@@ -11,8 +11,7 @@ const asyncWrap = require("./utilities/asyncWrap");
 const ExpressError = require("./utilities/ExpressError");
 const URI = require("./connectString").connectString;
 const mapsApiKey = require("./mapsAPIKey").mapsAPIKey;
-//const URI = process.env.mongoDBKey;
-//const mapsApiKey = process.env.mapsAPIKey;
+const port = process.env.PORT || 3000;
 const surfspotsForMainMap = require("./utilities/surfspotsForMainMap");
 mongoose
   .connect(URI, {
@@ -192,6 +191,6 @@ app.use((err, req, res, next) => {
   res.status(status).send(message);
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
   console.log("Serving Port: " + process.env.PORT);
 });
