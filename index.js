@@ -31,7 +31,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static("public"));
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
-app.use(favicon("/favicon.ico"));
+app.use(favicon("./favicon.ico"));
 app.get("/", async (req, res) => {
   const test = await Surfspot.findOne();
   res.redirect("/surfspots");
