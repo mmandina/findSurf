@@ -8,7 +8,8 @@
     "node": "16.17.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node index.js"
   },
   "author": "Maxwell Mandina",
   "license": "ISC",
@@ -33,4 +34,5 @@
     "react-dom": "^18.1.0",
     "uuid": "^8.3.2"
   }
+  
 }
