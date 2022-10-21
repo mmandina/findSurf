@@ -2,10 +2,7 @@
 function initMap() {
   var script_tag = document.getElementById("mapsId");
   var lat = script_tag.getAttribute("Lat");
-
   let coordinates = lat.split(",");
-
-  /*we get here if the string is not valid coordinates or format is inconsistent between lat and long*/
 
   const spot = {
     lat: Number.parseFloat(coordinates[0]),
