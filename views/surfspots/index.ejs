@@ -19,12 +19,12 @@
         
       <div class="card mb-3">
         <div class="row">
-         <!-- 
-          No Image Database Yet
+          <%if(spot.hasCoordinates){%>
           <div class="col-md-4">
-            <img class="img-fluid"src="<%= spot.image%>" alt="spot image">
-
-          </div>-->
+            <img class="img-fluid"src="https://maps.googleapis.com/maps/api/staticmap?center=<%=spot.coordinateConverter()[0]%>,<%=spot.coordinateConverter()[1]%>&zoom=12&size=400x400&maptype=hybrid&key=AIzaSyDyWCoO_MCZNqbpIGB8PmlQo_GckQFLa5k
+            " alt="spot image">
+          </div>
+          <%}%>
           <div class="col-md-8">
             <div class="card-body">
               <h6 class="card-title"><%= spot.spotName %> </h5>
