@@ -5,8 +5,8 @@
   <main class="container">
    
     <h1>Search Results</h1>
-    <a class="btn btn-warning mb-3" href="/surfspots/">Return to Index</a>
-    <form  action="/surfspots/search" method="post">
+    <a class="btn btn-warning mb-3" href="/surfspots/1">Return to Index</a>
+    <form  class="mb-2"action="/surfspots/search/?page=1&" method="GET">
       <input class="form-control" type="text" name="searchText" placeholder="Search Spots" id="searchText" aria-label="Search">
     <button class="btn btn-success my-2 my-sm-0" >Search</button>
     </form>
@@ -16,13 +16,12 @@
         
       <div class="card mb-3">
         <div class="row">
-          <!-- Commented out until load-more functionality implemented
              <%if(spot.hasCoordinates){%>
-            <div class="col-md-4">
-              <img class="img-fluid"src="https://maps.googleapis.com/maps/api/staticmap?center=<%=spot.coordinateConverter()[0]%>,<%=spot.coordinateConverter()[1]%>&zoom=12&size=400x400&maptype=hybrid&key=AIzaSyDyWCoO_MCZNqbpIGB8PmlQo_GckQFLa5k
+            <div class="col-md-4 d-flex align-items-center">
+              <img class="img-fluid p-2"src="https://maps.googleapis.com/maps/api/staticmap?center=<%=spot.coordinateConverter()[0]%>,<%=spot.coordinateConverter()[1]%>&zoom=17&size=400x400&markers=<%=spot.coordinateConverter()[0]%>,<%=spot.coordinateConverter()[1]%>&maptype=hybrid&key=AIzaSyDyWCoO_MCZNqbpIGB8PmlQo_GckQFLa5k
               " alt="spot image">
             </div>
-            <%}%> -->
+            <%}%>
           <div class="col-md-8">
             <div class="card-body">
               <h6 class="card-title"><%= spot.spotName %> </h5>
@@ -41,6 +40,37 @@
 
       <% } %>
 
+        
+      <% if (pages > 0) { %>
+        <nav>
+        <ul class="pagination">
+            <% if (current == 1) { %>
+                <li class="page-item disabled"><a class="page-link">First</a></li>
+            <% } else { %>
+                <li><a class="page-link"href="/surfspots/search/?page=1&searchText=<%=searchText%>">First</a></li>
+            <% } %>
+            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+            <% if (i !== 1) { %>
+                <li class="page-item disabled"><a class="page-link">...</a></li>
+            <% } %>
+            <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                <% if (i == current) { %>
+                    <li class="page-item active"><a class="page-link"><%= i %></a></li>
+                <% } else { %>
+                    <li><a class="page-link" href="/surfspots/search/?page=<%= i %>&searchText=<%=searchText%>"><%= i %></a></li>
+                <% } %>
+                <% if (i == Number(current) + 4 && i < pages) { %>
+                    <li class="page-item disabled"><a class="page-link">...</a></li>
+                <% } %>
+            <% } %>
+            <% if (current == pages) { %>
+                <li class="page-item disabled"><a class="page-link">Last</a></li>
+            <% } else { %>
+                <li><a class="page-link" href="/surfspots/search/?page=<%= pages %>&searchText=<%=searchText%>">Last</a></li>
+            <% } %>
+        </ul>
+      </nav>
+    <% } %>
   </main>
 
   <%-include('partials/footer')%>

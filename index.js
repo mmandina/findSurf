@@ -36,73 +36,132 @@ app.get("/", async (req, res) => {
   res.redirect("/surfspots/mainMap");
 });
 
-app.post(
-  "/surfspots/search",
+app.get(
+  "/surfspots/search/*",
   asyncWrap(async (req, res) => {
+    let perPage = 10;
+    let page = req.query.page || 1;
+    let searchText = req.query.searchText;
+    let count = 0;
+    await Surfspot.countDocuments(
+      {
+        $or: [
+          {
+            spotName: {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            },
+          },
+          {
+            "location.country": {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            },
+          },
+          {
+            "location.Subzone1": {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            },
+          },
+          {
+            "location.Subzone2": {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            },
+          },
+          {
+            "location.subzone3": {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            },
+          },
+          {
+            "location.subzone4": {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            },
+          },
+        ],
+      },
+      function (err, number) {
+        count = number;
+      }
+    ).clone();
     const surfspots = await Surfspot.find({
       $or: [
         {
           spotName: {
-            $regex: new RegExp(
-              /*"^" + */ req.body.searchText.toLowerCase(),
-              "i"
-            ),
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
           },
         },
         {
           "location.country": {
-            $regex: new RegExp(
-              /*"^" + */ req.body.searchText.toLowerCase(),
-              "i"
-            ),
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
           },
         },
         {
           "location.Subzone1": {
-            $regex: new RegExp(
-              /*"^" + */ req.body.searchText.toLowerCase(),
-              "i"
-            ),
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
           },
         },
         {
           "location.Subzone2": {
-            $regex: new RegExp(
-              /*"^" + */ req.body.searchText.toLowerCase(),
-              "i"
-            ),
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
           },
         },
         {
           "location.subzone3": {
-            $regex: new RegExp(
-              /*"^" + */ req.body.searchText.toLowerCase(),
-              "i"
-            ),
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
           },
         },
         {
           "location.subzone4": {
-            $regex: new RegExp(
-              /*"^" + */ req.body.searchText.toLowerCase(),
-              "i"
-            ),
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
           },
         },
       ],
-    });
-    res.render("surfspots/searchResult", { surfspots, title: "Results" });
+    })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec(function (err, surfspots) {
+        if (err) return next(err);
+        res.render("surfspots/searchResult", {
+          surfspots,
+          title: "Results",
+          current: page,
+          pages: Math.ceil(count / perPage),
+          searchText,
+        });
+      });
   })
 );
-
 app.get(
-  "/surfspots",
+  "/surfspots/mainMap",
   asyncWrap(async (req, res) => {
-    const surfspots = await Surfspot.find({}).limit(11);
-    res.render("surfspots/index", {
-      surfspots,
-      title: "findSurf - Surfspot Index",
+    const surfspotsForMap = await Surfspot.find({ hasCoordinates: true });
+    let cleanedSurfSpots = await surfspotsForMainMap(surfspotsForMap);
+    cleanedSurfSpots = JSON.stringify(cleanedSurfSpots);
+    res.render("surfspots/mainMap", {
+      cleanedSurfSpots,
+      apiKey: mapsApiKey,
     });
+  })
+);
+app.get(
+  "/surfspots/:page",
+  asyncWrap(async (req, res) => {
+    let perPage = 10;
+    let page = req.params.page || 1;
+    console.log;
+    const surfspots = await Surfspot.find({})
+      .skip(perPage * page)
+      .limit(perPage)
+      .exec(function (err, surfspots) {
+        Surfspot.count().exec(function (err, count) {
+          if (err) return next(err);
+          res.render("surfspots/index", {
+            surfspots,
+            current: page,
+            title: "findSurf - Surfspot Index",
+            pages: Math.ceil(count / perPage) - 1,
+          });
+        });
+      });
   })
 );
 
@@ -146,19 +205,6 @@ app.get(
     res.render("surfspots/detailMap", {
       spot,
       title: `findSurf - ${spot.title}`,
-      apiKey: mapsApiKey,
-    });
-  })
-);
-
-app.get(
-  "/surfspots/mainMap",
-  asyncWrap(async (req, res) => {
-    const surfspotsForMap = await Surfspot.find({ hasCoordinates: true });
-    let cleanedSurfSpots = await surfspotsForMainMap(surfspotsForMap);
-    cleanedSurfSpots = JSON.stringify(cleanedSurfSpots);
-    res.render("surfspots/mainMap", {
-      cleanedSurfSpots,
       apiKey: mapsApiKey,
     });
   })
