@@ -53,7 +53,7 @@
           <% if(spot.waveChars.type) { %><p class="fw-light mb-0">Break Type: <%= spot.waveChars.type %></p><%}%>
           <% if(spot.waveChars.direction) { %><p class="fw-light mb-0">Break Direction: <%= spot.waveChars.direction %></p><%}%>
           <% if(spot.waveChars.bottom) { %><p class="fw-light mb-0">Bottom Type: <%= spot.waveChars.bottom %></p><%}%>
-          <% if(spot.waveChars.power) { %><p class="fw-light mb-0">Wave Power <%= spot.waveChars.power %></p><%}%>
+          <% if(spot.waveChars.power) { %><p class="fw-light mb-0">Wave Power: <%= spot.waveChars.power %></p><%}%>
           <% if(spot.waveChars.length) { %><p class="fw-light mb-0">Average Wave Length: <%= spot.waveChars.length %></p><%}%>
           <% if(spot.waveChars.goodlength) { %><p class="fw-light mb-0">Good Wave Length: <%= spot.waveChars.goodlength %></p><%}%>
           </li>
@@ -62,7 +62,7 @@
             <% if(spot.enviroChars.windDir) { %><p class="fw-light mb-0">Wind Direction: <%= spot.enviroChars.windDir%></p><%}%>
             <% if(spot.enviroChars.swellDir) { %><p class="fw-light mb-0">Swell Direction: <%= spot.enviroChars.swellDir %></p><%}%>
             <% if(spot.enviroChars.swellSize) { %><p class="fw-light mb-0">Swell Size: <%= spot.enviroChars.swellSize %></p><%}%>
-            <% if(spot.enviroChars.tidePos) { %><p class="fw-light mb-0">Tide Position:<%= spot.enviroChars.tidePos %></p><%}%>
+            <% if(spot.enviroChars.tidePos) { %><p class="fw-light mb-0">Tide Position: <%= spot.enviroChars.tidePos %></p><%}%>
             <% if(spot.enviroChars.tideMov) { %><p class="fw-light mb-0">Tide Direction: <%= spot.enviroChars.tideMov %></p><%}%>
             </li>
             <li class="list-group-item">
@@ -70,16 +70,17 @@
               <% if(spot.access.description) { %><p class="fw-light mb-0">Description: <%= spot.access.description %></p><%}%>
               <% if(spot.access.distance) { %><p class="fw-light mb-0">Distance: <%= spot.access.distance%></p><%}%>
               <% if(spot.access.walk) { %><p class="fw-light mb-0">Walk: <%= spot.access.walk %></p><%}%>
-              <% if(spot.access.easyToFind) { %><p class="fw-light mb-0">Ease of Location: <%= spot.access.easyToFind %></p><%}%>
+              <% if(spot.access.easyToFind) { %><p class="fw-light mb-0">Ease of Access: <%= spot.access.easyToFind %></p><%}%>
               <% if(spot.access.publicAccess) { %><p class="fw-light mb-0">Public Access?: <%= spot.access.publicAccess %></p><%}%>
               <% if(spot.access.specialAccess) { %><p class="fw-light mb-0">Special Access?: <%= spot.access.specialAccess %></p><%}%>
               </li>
-            <li class="list-group-item">
-              <h5>Miscellaneous Information: </h5>
+              <% if(spot.miscDetails.weekCrowd||spot.miscDetails.weekendCrowd||spot.miscDetails.weekendCrowd||spot.dangers){%>
+                <li class="list-group-item">
+             <h5>Miscellaneous Information: </h5>
               <% if(spot.miscDetails.weekCrowd) { %><p class="fw-light mb-0">Crowd During Week: <%= spot.miscDetails.weekCrowd %></p><%}%>
               <% if(spot.miscDetails.weekendCrowd) { %><p class="fw-light mb-0">Crowd During Weekend: <%= spot.miscDetails.weekendCrowd%></p><%}%>
               <% if(spot.dangers) { %><p class="fw-light mb-0">Dangers: <%= spot.dangers %></p><%}%>
-              </li>
+              </li><%}%>
         </ul>
         <div class="card-body">
           <p><b>Note: </b>Edit and Delete temporarily disabled pending implementation of permissions</p>
