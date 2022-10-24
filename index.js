@@ -20,7 +20,7 @@ const LocalStrategy = require("passport-local");
 const { isLoggedIn } = require("./middleware/isLoggedIn");
 const { isAdmin } = require("./middleware/isAdmin");
 const User = require("./models/User");
-
+const MongoSanizite = require("express-mongo-sanitize");
 mongoose
   .connect(URI, {
     usenewUrlParser: true,
@@ -35,7 +35,7 @@ mongoose
   });
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-
+app.use(MongoSanizite());
 const sessionConfig = {
   secret: "testSecret",
   resave: false,
