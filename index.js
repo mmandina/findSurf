@@ -18,6 +18,7 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const { isLoggedIn } = require("./middleware/isLoggedIn");
+const { isAdmin } = require("./middleware/isAdmin");
 const User = require("./models/User");
 
 mongoose
@@ -125,8 +126,7 @@ app.post(
     console.log(req.session);
     let visitLast = req.session.returnTo;
     console.log(req.session.returnTo);
-
-    //delete req.session.returnTo;
+    delete req.session.returnTo;
     res.redirect(visitLast);
   }
 );
@@ -265,16 +265,17 @@ app.get(
   })
 );
 
-app.get("/surfspots/new", (req, res) => {
-  res.render("surfspots/new", {
-    surfSpotDescriptors,
-    title: "Submit New Surfspot",
-  });
-});
+// app.get("/surfspots/new", (req, res) => {
+//   res.render("surfspots/new", {
+//     surfSpotDescriptors,
+//     title: "Submit New Surfspot",
+//   });
+// });
 
 app.get(
   "/surfspots/edit/:id",
   isLoggedIn,
+  isAdmin,
   asyncWrap(async (req, res) => {
     const spotId = req.params.id;
     const spot = await Surfspot.findById(spotId);
@@ -289,6 +290,7 @@ app.get(
 app.put(
   "/surfspots/edit/:id/",
   isLoggedIn,
+  isAdmin,
   asyncWrap(async (req, res) => {
     const spotId = req.params.id;
     const updatedSpot = await Surfspot.findByIdAndUpdate(
@@ -315,6 +317,7 @@ app.get(
 app.delete(
   "/surfspots/:id",
   isLoggedIn,
+  isAdmin,
   asyncWrap(async (req, res) => {
     const spotId = req.params.id;
     await Surfspot.findByIdAndDelete(spotId);
@@ -322,15 +325,16 @@ app.delete(
   })
 );
 
-app.post(
-  "/surfspots/",
-  isLoggedIn,
-  asyncWrap(async (req, res) => {
-    const newSpot = new Surfspot(req.body.surfspot);
-    await newSpot.save();
-    res.redirect("/surfspots");
-  })
-);
+// app.post(
+//   "/surfspots/",
+//   isLoggedIn,
+//   isAdmin,
+//   asyncWrap(async (req, res) => {
+//     const newSpot = new Surfspot(req.body.surfspot);
+//     await newSpot.save();
+//     res.redirect("/surfspots");
+//   })
+// );
 
 app.all("*", (req, res, next) => {
   next(new ExpressError("PAGE NOT FOUND", 404));
