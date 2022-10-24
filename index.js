@@ -19,6 +19,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const { isLoggedIn } = require("./middleware/isLoggedIn");
 const User = require("./models/User");
+
 mongoose
   .connect(URI, {
     usenewUrlParser: true,
@@ -57,7 +58,6 @@ app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
 app.use(favicon("./favicon.ico"));
 app.use((req, res, next) => {
-  console.log(req.session);
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
@@ -118,11 +118,15 @@ app.post(
   passport.authenticate("local", {
     failureFlash: true,
     failureRedirect: "/login",
+    keepSessionInfo: true,
   }),
   async (req, res) => {
     req.flash("success", "Welcome Back!");
-    let visitLast = req.session.returnTo || "/surfspots/index";
-    delete req.session.returnTo;
+    console.log(req.session);
+    let visitLast = req.session.returnTo;
+    console.log(req.session.returnTo);
+
+    //delete req.session.returnTo;
     res.redirect(visitLast);
   }
 );
@@ -243,7 +247,7 @@ app.get(
   asyncWrap(async (req, res) => {
     let perPage = 10;
     let page = req.params.page || 1;
-    console.log;
+
     const surfspots = await Surfspot.find({})
       .skip(perPage * page)
       .limit(perPage)
