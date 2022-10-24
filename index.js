@@ -270,6 +270,7 @@ app.get("/surfspots/new", (req, res) => {
 
 app.get(
   "/surfspots/edit/:id",
+  isLoggedIn,
   asyncWrap(async (req, res) => {
     const spotId = req.params.id;
     const spot = await Surfspot.findById(spotId);
@@ -313,7 +314,7 @@ app.delete(
   asyncWrap(async (req, res) => {
     const spotId = req.params.id;
     await Surfspot.findByIdAndDelete(spotId);
-    res.redirect("/surfspots/");
+    res.redirect("/surfspots/index");
   })
 );
 
