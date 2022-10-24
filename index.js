@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const app = express();
+const flash = require("connect-flash");
 const favicon = require("serve-favicon");
 const mongoose = require("mongoose");
 const Surfspotmodel = require("./models/ScraperSpot.js");
@@ -13,6 +14,11 @@ const URI = require("./connectString").connectString;
 const mapsApiKey = require("./mapsAPIKey").mapsAPIKey;
 const port = process.env.PORT || 3000;
 const surfspotsForMainMap = require("./utilities/surfspotsForMainMap");
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const { isLoggedIn } = require("./middleware/isLoggedIn");
+const User = require("./models/User");
 mongoose
   .connect(URI, {
     usenewUrlParser: true,
@@ -27,10 +33,100 @@ mongoose
   });
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+const sessionConfig = {
+  secret: "testSecret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+    httpOnly: true,
+  },
+};
+app.use(session(sessionConfig));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use(express.static("public"));
+app.use(flash());
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
 app.use(favicon("./favicon.ico"));
+app.use((req, res, next) => {
+  console.log(req.session);
+  res.locals.currentUser = req.user;
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
+
+app.get(
+  "/register",
+  asyncWrap(async (req, res) => {
+    res.render("users/register", {
+      title: "findSurf - Register New User",
+    });
+  })
+);
+
+app.post("/register", async (req, res, next) => {
+  try {
+    const { email, username, password } = req.body;
+    const user = new User({
+      email,
+      username,
+    });
+    const newUser = await User.register(user, password);
+    req.login(newUser, (err) => {
+      if (err) return next(err);
+      req.flash("success", "Aloha! Welcome to findSurf");
+      res.redirect("/surfspots/index");
+    });
+  } catch (error) {
+    req.flash("error", error.message);
+    res.redirect("/register");
+  }
+});
+
+app.get(
+  "/login",
+  asyncWrap(async (req, res) => {
+    res.render("users/login", {
+      title: "findSurf - Login",
+    });
+  })
+);
+
+app.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    } else {
+      req.flash("success", "Successfully Logged Out");
+      res.redirect("/surfspots/index");
+      return;
+    }
+  });
+});
+
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    failureFlash: true,
+    failureRedirect: "/login",
+  }),
+  async (req, res) => {
+    req.flash("success", "Welcome Back!");
+    let visitLast = req.session.returnTo || "/surfspots/index";
+    delete req.session.returnTo;
+    res.redirect(visitLast);
+  }
+);
+
 app.get("/", async (req, res) => {
   const test = await Surfspot.findOne();
   res.redirect("/surfspots/mainMap");
@@ -187,6 +283,7 @@ app.get(
 
 app.put(
   "/surfspots/edit/:id/",
+  isLoggedIn,
   asyncWrap(async (req, res) => {
     const spotId = req.params.id;
     const updatedSpot = await Surfspot.findByIdAndUpdate(
@@ -212,6 +309,7 @@ app.get(
 
 app.delete(
   "/surfspots/:id",
+  isLoggedIn,
   asyncWrap(async (req, res) => {
     const spotId = req.params.id;
     await Surfspot.findByIdAndDelete(spotId);
@@ -221,6 +319,7 @@ app.delete(
 
 app.post(
   "/surfspots/",
+  isLoggedIn,
   asyncWrap(async (req, res) => {
     const newSpot = new Surfspot(req.body.surfspot);
     await newSpot.save();
