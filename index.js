@@ -62,6 +62,7 @@ const sessionConfig = {
     // secure: true,
   },
 };
+
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
