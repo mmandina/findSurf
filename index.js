@@ -24,7 +24,7 @@ const MongoSanizite = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const MongoDBStore = require("connect-mongo");
 mongoose
-  .connect(process.env.mongoDBKey, {
+  .connect(process.env.mongoDBKey || URI, {
     usenewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -45,14 +45,14 @@ app.use(
 );
 app.use(MongoSanizite());
 const store = MongoDBStore.create({
-  mongoUrl: process.env.mongoDBKey,
+  mongoUrl: process.env.mongoDBKey || URI,
   secret: process.env.SECRET,
   touchAfter: 24 * 60 * 60,
 });
 const sessionConfig = {
   store,
   name: "sessionFindSurf",
-  secret: process.env.SECRET,
+  secret: process.env.SECRET || TESTSECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
