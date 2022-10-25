@@ -44,8 +44,8 @@ app.use(
   })
 );
 app.use(MongoSanizite());
-const store = new MongoDBStore({
-  url: process.env.mongoDBKey,
+const store = MongoDBStore.create({
+  mongoUrl: process.env.mongoDBKey,
   secret: process.env.SECRET,
   touchAfter: 24 * 60 * 60,
 });
