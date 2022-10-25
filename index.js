@@ -21,8 +21,10 @@ const { isLoggedIn } = require("./middleware/isLoggedIn");
 const { isAdmin } = require("./middleware/isAdmin");
 const User = require("./models/User");
 const MongoSanizite = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const MongoDBStore = require("connect-mongo")(session);
 mongoose
-  .connect(URI, {
+  .connect(process.env.mongoDBKey, {
     usenewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -35,15 +37,29 @@ mongoose
   });
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  })
+);
 app.use(MongoSanizite());
+const store = new MongoDBStore({
+  url: process.env.mongoDBKey,
+  secret: process.env.SECRET,
+  touchAfter: 24 * 60 * 60,
+});
 const sessionConfig = {
-  secret: "testSecret",
+  store,
+  name: "sessionFindSurf",
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
     httpOnly: true,
+    secure: true,
   },
 };
 app.use(session(sessionConfig));
@@ -238,7 +254,7 @@ app.get(
     cleanedSurfSpots = JSON.stringify(cleanedSurfSpots);
     res.render("surfspots/mainMap", {
       cleanedSurfSpots,
-      apiKey: mapsApiKey,
+      apiKey: process.env.mapsAPIKey,
     });
   })
 );
@@ -309,7 +325,7 @@ app.get(
     res.render("surfspots/detailMap", {
       spot,
       title: `findSurf - ${spot.title}`,
-      apiKey: mapsApiKey,
+      apiKey: process.env.mapsAPIKey,
     });
   })
 );
