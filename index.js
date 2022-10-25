@@ -22,7 +22,7 @@ const { isAdmin } = require("./middleware/isAdmin");
 const User = require("./models/User");
 const MongoSanizite = require("express-mongo-sanitize");
 const helmet = require("helmet");
-const MongoDBStore = require("connect-mongo")(session);
+const MongoDBStore = require("connect-mongo");
 mongoose
   .connect(process.env.mongoDBKey, {
     usenewUrlParser: true,
