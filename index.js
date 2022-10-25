@@ -46,13 +46,13 @@ app.use(
 app.use(MongoSanizite());
 const store = MongoDBStore.create({
   mongoUrl: process.env.mongoDBKey || URI,
-  secret: process.env.SECRET,
+  secret: process.env.SECRET || "TEST SECRET",
   touchAfter: 24 * 60 * 60,
 });
 const sessionConfig = {
   store,
   name: "sessionFindSurf",
-  secret: process.env.SECRET || TESTSECRET,
+  secret: process.env.SECRET || "TESTSECRET",
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -254,7 +254,7 @@ app.get(
     cleanedSurfSpots = JSON.stringify(cleanedSurfSpots);
     res.render("surfspots/mainMap", {
       cleanedSurfSpots,
-      apiKey: process.env.mapsAPIKey,
+      apiKey: process.env.mapsAPIKey || mapsApiKey,
     });
   })
 );
@@ -325,7 +325,7 @@ app.get(
     res.render("surfspots/detailMap", {
       spot,
       title: `findSurf - ${spot.title}`,
-      apiKey: process.env.mapsAPIKey,
+      apiKey: process.env.mapsAPIKey || mapsApiKey,
     });
   })
 );
