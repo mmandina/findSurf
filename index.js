@@ -140,10 +140,9 @@ app.post(
   }),
   async (req, res) => {
     req.flash("success", "Welcome Back!");
-    console.log(req.session);
     let visitLast = req.session.returnTo;
-    console.log(req.session.returnTo);
     delete req.session.returnTo;
+    if (visitLast === undefined) visitLast = "/surfspots/index";
     res.redirect(visitLast);
   }
 );
