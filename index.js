@@ -40,7 +40,7 @@ mongoose
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-//Use helmet security middlewear
+//Use helmet security middlewear, with contentSecurityPolice disabled
 app.use(
   helmet({
     contentSecurityPolicy: false,
