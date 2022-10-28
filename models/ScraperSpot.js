@@ -1,7 +1,8 @@
+//Current schema in use
+
 const mongoose = require("mongoose");
 const CoordinatesConv = require("coordinate-parser");
 const Schema = mongoose.Schema;
-//https://www.wannasurf.com/spot/North_America/USA/North_East/New_Jersey/36th_Street/index.html
 
 SurfspotSchema = new Schema({
   spotName: {

@@ -1,3 +1,4 @@
+//deprecated Schema from first iteration/concept test
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bottomcomp = ["Coral", "Rock", "Sand", "Mixed"];
@@ -28,7 +29,7 @@ SurfspotSchema = new Schema({
   description: {
     type: String,
   },
-  image:String,
+  image: String,
 });
 // let exportObj = {};
 // exportObj.Surfspot = mongoose.model("Surfspot", SurfspotSchema);

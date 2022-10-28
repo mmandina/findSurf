@@ -26,6 +26,8 @@ async function initMap() {
       lat: Number.parseFloat(cleanSurfspots[i].Lat),
       lng: Number.parseFloat(cleanSurfspots[i].Long),
     };
+
+    //the information windows populated with information from the cleanedSurfSpots objs
     let contentString = `<h6>${cleanSurfspots[i].spotName}</h6>
     <p><b>${cleanSurfspots[i].location}</b></p>
     <p>Experience Level: ${cleanSurfspots[i].experience}</p>

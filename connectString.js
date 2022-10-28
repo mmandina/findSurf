@@ -1,3 +1,5 @@
+//MongoDB Atlas API string
+
 const uri =
   "mongodb+srv://mmandina:demon677@cluster0.ivehbdn.mongodb.net/findSurf?retryWrites=true&w=majority";
 
