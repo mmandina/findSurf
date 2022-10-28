@@ -83,6 +83,14 @@ app.use((req, res, next) => {
 });
 
 app.get(
+  "/home",
+  asyncWrap(async (req, res) => {
+    res.render("home", {
+      title: "findSurf - Home Page",
+    });
+  })
+);
+app.get(
   "/register",
   asyncWrap(async (req, res) => {
     res.render("users/register", {
@@ -148,8 +156,7 @@ app.post(
 );
 
 app.get("/", async (req, res) => {
-  const test = await Surfspot.findOne();
-  res.redirect("/surfspots/mainMap");
+  res.redirect("/home");
 });
 
 app.get(

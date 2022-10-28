@@ -4,9 +4,26 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>findSurf: Home Page</title>
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
   </head>
-  <body>
-    <h1>findSurf Home</h1>
-  </body>
 </html>
+<body class="d-flex flex-column vh-100 bg-image"  style="
+background-image: url(/assets/maria-orlova-F-1LrDh_Zx8-unsplash.jpg);
+background-size: cover;
+">
+
+    <%- include('surfspots/partials/navbar') %> 
+    <main class="px-3">
+   
+      <%-include('surfspots/partials/flash')%>
+      <h1>findSurf</h1>
+      <p class="lead"><br> A comprehensive global surf Atlas!<br>
+          Currently contains coordinates and local knowledge for over 8500 surfspots world wide!</p>
+          <br>
+      <a href="/surfSpots/mainMap" class="btn btn-lg btn-secondary font-weight-bold border-white">Global Map</a>
+
+
+    </main>
+  </div>
+    <%-include('surfspots/partials/footer')%>
