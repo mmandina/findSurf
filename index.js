@@ -47,7 +47,7 @@ app.use(
     crossOriginEmbedderPolicy: false,
   })
 );
-//Prevent mongoDB injection attacks
+//Prevented mongoDB injection attacks
 app.use(MongoSanizite());
 
 //Use MongoDB to store session information
