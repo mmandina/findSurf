@@ -1,46 +1,46 @@
-const express = require("express");
-const path = require("path");
+const express = require('express');
+const path = require('path');
 const app = express();
 
-const flash = require("connect-flash");
-const favicon = require("serve-favicon");
-const mongoose = require("mongoose");
-const Surfspotmodel = require("./models/ScraperSpot.js");
-const methodOverride = require("method-override");
+const flash = require('connect-flash');
+const favicon = require('serve-favicon');
+const mongoose = require('mongoose');
+const Surfspotmodel = require('./models/ScraperSpot.js');
+const methodOverride = require('method-override');
 const Surfspot = Surfspotmodel.Surfspot;
-const asyncWrap = require("./utilities/asyncWrap");
-const ExpressError = require("./utilities/ExpressError");
-const URI = require("./connectString").connectString;
-const mapsApiKey = require("./mapsAPIKey").mapsAPIKey;
+const asyncWrap = require('./utilities/asyncWrap');
+const ExpressError = require('./utilities/ExpressError');
+const URI = require('./connectString').connectString;
+const mapsApiKey = require('./mapsAPIKey').mapsAPIKey;
 const port = process.env.PORT || 3000;
-const surfspotsForMainMap = require("./utilities/surfspotsForMainMap");
-const session = require("express-session");
-const passport = require("passport");
-const LocalStrategy = require("passport-local");
-const { isLoggedIn } = require("./middleware/isLoggedIn");
-const { isAdmin } = require("./middleware/isAdmin");
-const User = require("./models/User");
-const MongoSanizite = require("express-mongo-sanitize");
-const helmet = require("helmet");
+const surfspotsForMainMap = require('./utilities/surfspotsForMainMap');
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const { isLoggedIn } = require('./middleware/isLoggedIn');
+const { isAdmin } = require('./middleware/isAdmin');
+const User = require('./models/User');
+const MongoSanizite = require('express-mongo-sanitize');
+const helmet = require('helmet');
 
 //connect MongoDB, use Heroku environmental variable or Local
-const MongoDBStore = require("connect-mongo");
+const MongoDBStore = require('connect-mongo');
 mongoose
   .connect(process.env.mongoDBKey || URI, {
     usenewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("Mongo Connected");
+    console.log('Mongo Connected');
   })
   .catch((err) => {
-    console.log("Mongo ERROR:");
+    console.log('Mongo ERROR:');
     console.log(err);
   });
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-//Use helmet security middlewear, with contentSecurityPolice disabled
+//Used helmet security middlewear, with contentSecurityPolice disabled
 app.use(
   helmet({
     contentSecurityPolicy: false,
@@ -53,13 +53,13 @@ app.use(MongoSanizite());
 //Use MongoDB to store session information
 const store = MongoDBStore.create({
   mongoUrl: process.env.mongoDBKey || URI,
-  secret: process.env.SECRET || "TEST SECRET",
+  secret: process.env.SECRET || 'TEST SECRET',
   touchAfter: 24 * 60 * 60,
 });
 const sessionConfig = {
   store,
-  name: "sessionFindSurf",
-  secret: process.env.SECRET || "TESTSECRET",
+  name: 'sessionFindSurf',
+  secret: process.env.SECRET || 'TESTSECRET',
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -79,39 +79,39 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use(express.static("public"));
+app.use(express.static('public'));
 app.use(flash());
-app.use(methodOverride("_method"));
+app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true }));
-app.use(favicon("./favicon.ico"));
+app.use(favicon('./favicon.ico'));
 
 //Add flash middleware to allow popups
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
   next();
 });
 
 app.get(
-  "/home",
+  '/home',
   asyncWrap(async (req, res) => {
-    res.render("home", {
-      title: "findSurf - Home Page",
+    res.render('home', {
+      title: 'findSurf - Home Page',
     });
   })
 );
 
 app.get(
-  "/register",
+  '/register',
   asyncWrap(async (req, res) => {
-    res.render("users/register", {
-      title: "findSurf - Register New User",
+    res.render('users/register', {
+      title: 'findSurf - Register New User',
     });
   })
 );
 
-app.post("/register", async (req, res, next) => {
+app.post('/register', async (req, res, next) => {
   //add new user to users collection
   try {
     const { email, username, password } = req.body;
@@ -122,61 +122,61 @@ app.post("/register", async (req, res, next) => {
     const newUser = await User.register(user, password);
     req.login(newUser, (err) => {
       if (err) return next(err);
-      req.flash("success", "Aloha! Welcome to findSurf");
-      res.redirect("/surfspots/index");
+      req.flash('success', 'Aloha! Welcome to findSurf');
+      res.redirect('/surfspots/index');
     });
   } catch (error) {
-    req.flash("error", error.message);
-    res.redirect("/register");
+    req.flash('error', error.message);
+    res.redirect('/register');
   }
 });
 
 app.get(
-  "/login",
+  '/login',
   asyncWrap(async (req, res) => {
-    res.render("users/login", {
-      title: "findSurf - Login",
+    res.render('users/login', {
+      title: 'findSurf - Login',
     });
   })
 );
 
-app.get("/logout", (req, res, next) => {
+app.get('/logout', (req, res, next) => {
   req.logout((err) => {
     if (err) {
       return next(err);
     } else {
-      req.flash("success", "Successfully Logged Out");
-      res.redirect("/surfspots/index");
+      req.flash('success', 'Successfully Logged Out');
+      res.redirect('/surfspots/index');
       return;
     }
   });
 });
 
 app.post(
-  "/login",
+  '/login',
   //use passport middlewear to make sure account is valid and log the user in
-  passport.authenticate("local", {
+  passport.authenticate('local', {
     failureFlash: true,
-    failureRedirect: "/login",
+    failureRedirect: '/login',
     keepSessionInfo: true,
   }),
   async (req, res) => {
-    req.flash("success", "Welcome Back!");
+    req.flash('success', 'Welcome Back!');
     //if redirected from a failure to edit/delete a spot, pass through the spot ID from request session data
     let visitLast = req.session.returnTo;
     delete req.session.returnTo;
     //if undefined (not redirected from an unlogged in attempt to edit/delete a post, redirect to the index)
-    if (visitLast === undefined) visitLast = "/surfspots/index";
+    if (visitLast === undefined) visitLast = '/surfspots/index';
     res.redirect(visitLast);
   }
 );
 
-app.get("/", async (req, res) => {
-  res.redirect("/home");
+app.get('/', async (req, res) => {
+  res.redirect('/home');
 });
 
 app.get(
-  "/surfspots/search/*",
+  '/surfspots/search/*',
   asyncWrap(async (req, res) => {
     let perPage = 10;
     let page = req.query.page || 1;
@@ -188,32 +188,32 @@ app.get(
         $or: [
           {
             spotName: {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
             },
           },
           {
-            "location.country": {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            'location.country': {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
             },
           },
           {
-            "location.Subzone1": {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            'location.Subzone1': {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
             },
           },
           {
-            "location.Subzone2": {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            'location.Subzone2': {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
             },
           },
           {
-            "location.subzone3": {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            'location.subzone3': {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
             },
           },
           {
-            "location.subzone4": {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            'location.subzone4': {
+              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
             },
           },
         ],
@@ -228,32 +228,32 @@ app.get(
       $or: [
         {
           spotName: {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
           },
         },
         {
-          "location.country": {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+          'location.country': {
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
           },
         },
         {
-          "location.Subzone1": {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+          'location.Subzone1': {
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
           },
         },
         {
-          "location.Subzone2": {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+          'location.Subzone2': {
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
           },
         },
         {
-          "location.subzone3": {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+          'location.subzone3': {
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
           },
         },
         {
-          "location.subzone4": {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), "i"),
+          'location.subzone4': {
+            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
           },
         },
       ],
@@ -263,9 +263,9 @@ app.get(
       .limit(perPage)
       .exec(function (err, surfspots) {
         if (err) return next(err);
-        res.render("surfspots/searchResult", {
+        res.render('surfspots/searchResult', {
           surfspots,
-          title: "Results",
+          title: 'Results',
           current: page,
           pages: Math.ceil(count / perPage),
           searchText,
@@ -274,7 +274,7 @@ app.get(
   })
 );
 app.get(
-  "/surfspots/mainMap",
+  '/surfspots/mainMap',
   asyncWrap(async (req, res) => {
     //find all spots that have valid coordinates
     const surfspotsForMap = await Surfspot.find({ hasCoordinates: true });
@@ -283,14 +283,14 @@ app.get(
     let cleanedSurfSpots = await surfspotsForMainMap(surfspotsForMap);
     //convert the surfspots documents to JSON so it can be passed through
     cleanedSurfSpots = JSON.stringify(cleanedSurfSpots);
-    res.render("surfspots/mainMap", {
+    res.render('surfspots/mainMap', {
       cleanedSurfSpots,
       apiKey: process.env.mapsAPIKey || mapsApiKey,
     });
   })
 );
 app.get(
-  "/surfspots/:page",
+  '/surfspots/:page',
   asyncWrap(async (req, res) => {
     let perPage = 10;
     let page = req.params.page || 1;
@@ -301,10 +301,10 @@ app.get(
       .exec(function (err, surfspots) {
         Surfspot.count().exec(function (err, count) {
           if (err) return next(err);
-          res.render("surfspots/index", {
+          res.render('surfspots/index', {
             surfspots,
             current: page,
-            title: "findSurf - Surfspot Index",
+            title: 'findSurf - Surfspot Index',
             pages: Math.ceil(count / perPage) - 1,
           });
         });
@@ -320,13 +320,13 @@ app.get(
 // });
 
 app.get(
-  "/surfspots/edit/:id",
+  '/surfspots/edit/:id',
   isLoggedIn,
   isAdmin,
   asyncWrap(async (req, res) => {
     const spotId = req.params.id;
     const spot = await Surfspot.findById(spotId);
-    res.render("surfspots/edit", {
+    res.render('surfspots/edit', {
       spot,
       title: `findSurf - Edit Spot: ${spot.title}`,
     });
@@ -334,7 +334,7 @@ app.get(
 );
 
 app.put(
-  "/surfspots/edit/:id/",
+  '/surfspots/edit/:id/',
   isLoggedIn,
   isAdmin,
   asyncWrap(async (req, res) => {
@@ -348,11 +348,11 @@ app.put(
 );
 
 app.get(
-  "/surfspots/detail/:id",
+  '/surfspots/detail/:id',
   asyncWrap(async (req, res) => {
     const spotId = req.params.id;
     const spot = await Surfspot.findById(spotId);
-    res.render("surfspots/detailMap", {
+    res.render('surfspots/detailMap', {
       spot,
       title: `findSurf - ${spot.title}`,
       apiKey: process.env.mapsAPIKey || mapsApiKey,
@@ -361,13 +361,13 @@ app.get(
 );
 
 app.delete(
-  "/surfspots/:id",
+  '/surfspots/:id',
   isLoggedIn,
   isAdmin,
   asyncWrap(async (req, res) => {
     const spotId = req.params.id;
     await Surfspot.findByIdAndDelete(spotId);
-    res.redirect("/surfspots/index");
+    res.redirect('/surfspots/index');
   })
 );
 
@@ -382,15 +382,15 @@ app.delete(
 //   })
 // );
 
-app.all("*", (req, res, next) => {
-  next(new ExpressError("PAGE NOT FOUND", 404));
+app.all('*', (req, res, next) => {
+  next(new ExpressError('PAGE NOT FOUND', 404));
 });
 
 app.use((err, req, res, next) => {
-  const { status = 500, message = "ERROR" } = err;
+  const { status = 500, message = 'ERROR' } = err;
   res.status(status).send(message);
 });
 
 app.listen(port, () => {
-  console.log("Serving Port: " + process.env.PORT);
+  console.log('Serving Port: ' + process.env.PORT);
 });
