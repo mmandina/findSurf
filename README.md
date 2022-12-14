@@ -5,11 +5,11 @@ Available at findSurf.maxwellmandina.com
 
 To Run Locally:
 
-Clone Repo
-Navigate to findSurf
-Open Terminal
-run npm install
-run node index.js
+Clone Repo<br>
+Navigate to findSurf<br>
+Open Terminal<br>
+run npm install<br>
+run node index.js<br>
 
 Splash Page:
 ![Screenshot 2022-12-14 at 12 41 45 PM](https://user-images.githubusercontent.com/89036038/207668298-5cc62708-c4fa-4f40-9f37-1ed9872661d2.png)
