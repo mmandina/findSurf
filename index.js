@@ -5,25 +5,22 @@ const app = express();
 const flash = require('connect-flash');
 const favicon = require('serve-favicon');
 const mongoose = require('mongoose');
-const Surfspotmodel = require('./models/ScraperSpot.js');
 const methodOverride = require('method-override');
-const Surfspot = Surfspotmodel.Surfspot;
 const asyncWrap = require('./utilities/asyncWrap');
 const ExpressError = require('./utilities/ExpressError');
 const URI = require('./connectString').connectString;
-const mapsApiKey = require('./mapsAPIKey').mapsAPIKey;
 const port = process.env.PORT || 3000;
-const surfspotsForMainMap = require('./utilities/surfspotsForMainMap');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const { isLoggedIn } = require('./middleware/isLoggedIn');
-const { isAdmin } = require('./middleware/isAdmin');
 const User = require('./models/User');
 const MongoSanizite = require('express-mongo-sanitize');
 const helmet = require('helmet');
 
-//connect MongoDB, use Heroku environmental variable or Local
+//import surfspot routes
+const surfspotRoutes = require('./routes/surfspots');
+
+//connect MongoDB, use Heroku environmental variable or local
 const MongoDBStore = require('connect-mongo');
 mongoose
   .connect(process.env.mongoDBKey || URI, {
@@ -39,7 +36,6 @@ mongoose
   });
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
 //Used helmet security middlewear, with contentSecurityPolicy disabled
 app.use(
   helmet({
@@ -92,6 +88,8 @@ app.use((req, res, next) => {
   res.locals.error = req.flash('error');
   next();
 });
+
+app.use('/surfspots', surfspotRoutes);
 
 app.get(
   '/home',
@@ -160,6 +158,7 @@ app.post(
     failureRedirect: '/login',
     keepSessionInfo: true,
   }),
+
   async (req, res) => {
     req.flash('success', 'Welcome Back!');
     //if redirected from a failure to edit/delete a spot, pass through the spot ID from request session data
@@ -174,180 +173,6 @@ app.post(
 app.get('/', async (req, res) => {
   res.redirect('/home');
 });
-
-app.get(
-  '/surfspots/search/*',
-  asyncWrap(async (req, res) => {
-    let perPage = 10;
-    let page = req.query.page || 1;
-    let searchText = req.query.searchText;
-    let count = 0;
-    const searchRegex = new RegExp(/*"^" + */ searchText.toLowerCase(), 'i');
-    const query = {
-      $or: [
-        {
-          spotName: {
-            $regex: searchRegex,
-          },
-        },
-        {
-          'location.country': {
-            $regex: searchRegex,
-          },
-        },
-        {
-          'location.Subzone1': {
-            $regex: searchRegex,
-          },
-        },
-        {
-          'location.Subzone2': {
-            $regex: searchRegex,
-          },
-        },
-        {
-          'location.subzone3': {
-            $regex: searchRegex,
-          },
-        },
-        {
-          'location.subzone4': {
-            $regex: searchRegex,
-          },
-        },
-      ],
-    };
-    //counts total of surfspots that match search
-    Surfspot.countDocuments(query, function (err, number) {
-      if (err) return next(err);
-      count = number;
-    }).clone();
-
-    //searches the collection for matches of given string to location, or name of spot. case insensitive.
-    const surfspots = Surfspot.find(query)
-      //pagination for above results
-      .skip(perPage * page - perPage)
-      .limit(perPage)
-      .exec(function (err, surfspots) {
-        if (err) return next(err);
-        res.render('surfspots/searchResult', {
-          surfspots,
-          title: 'Results',
-          current: page,
-          pages: Math.ceil(count / perPage),
-          searchText,
-        });
-      });
-  })
-);
-app.get(
-  '/surfspots/mainMap',
-  asyncWrap(async (req, res) => {
-    //find all spots that have valid coordinates
-    const surfspotsForMap = await Surfspot.find({ hasCoordinates: true });
-    //surfspotsForMainMap extracts needed information for google maps marker info boxes
-    // also parses the coordinates into format usable by google maps api
-    let cleanedSurfSpots = await surfspotsForMainMap(surfspotsForMap);
-    //convert the surfspots documents to JSON so it can be passed through
-    cleanedSurfSpots = JSON.stringify(cleanedSurfSpots);
-    res.render('surfspots/mainMap', {
-      cleanedSurfSpots,
-      apiKey: process.env.mapsAPIKey || mapsApiKey,
-    });
-  })
-);
-app.get(
-  '/surfspots/:page',
-  asyncWrap(async (req, res) => {
-    let perPage = 10;
-    let page = req.params.page || 1;
-    //pagination for the index. 10 per page
-    const surfspots = Surfspot.find({})
-      .skip(perPage * page)
-      .limit(perPage)
-      .exec(function (err, surfspots) {
-        Surfspot.count().exec(function (err, count) {
-          if (err) return next(err);
-          res.render('surfspots/index', {
-            surfspots,
-            current: page,
-            title: 'findSurf - Surfspot Index',
-            pages: Math.ceil(count / perPage) - 1,
-          });
-        });
-      });
-  })
-);
-
-// app.get("/surfspots/new", (req, res) => {
-//   res.render("surfspots/new", {
-//     surfSpotDescriptors,
-//     title: "Submit New Surfspot",
-//   });
-// });
-
-app.get(
-  '/surfspots/edit/:id',
-  isLoggedIn,
-  isAdmin,
-  asyncWrap(async (req, res) => {
-    const spotId = req.params.id;
-    const spot = await Surfspot.findById(spotId);
-    res.render('surfspots/edit', {
-      spot,
-      title: `findSurf - Edit Spot: ${spot.title}`,
-    });
-  })
-);
-
-app.put(
-  '/surfspots/edit/:id/',
-  isLoggedIn,
-  isAdmin,
-  asyncWrap(async (req, res) => {
-    const spotId = req.params.id;
-    const updatedSpot = await Surfspot.findByIdAndUpdate(
-      spotId,
-      req.body.surfspot
-    );
-    res.redirect(`/surfspots/detail/${updatedSpot._id}`);
-  })
-);
-
-app.get(
-  '/surfspots/detail/:id',
-  asyncWrap(async (req, res) => {
-    const spotId = req.params.id;
-    const spot = await Surfspot.findById(spotId);
-    res.render('surfspots/detailMap', {
-      spot,
-      title: `findSurf - ${spot.title}`,
-      apiKey: process.env.mapsAPIKey || mapsApiKey,
-    });
-  })
-);
-
-app.delete(
-  '/surfspots/:id',
-  isLoggedIn,
-  isAdmin,
-  asyncWrap(async (req, res) => {
-    const spotId = req.params.id;
-    await Surfspot.findByIdAndDelete(spotId);
-    res.redirect('/surfspots/index');
-  })
-);
-
-// app.post(
-//   "/surfspots/",
-//   isLoggedIn,
-//   isAdmin,
-//   asyncWrap(async (req, res) => {
-//     const newSpot = new Surfspot(req.body.surfspot);
-//     await newSpot.save();
-//     res.redirect("/surfspots");
-//   })
-// );
 
 app.all('*', (req, res, next) => {
   next(new ExpressError('PAGE NOT FOUND', 404));
