@@ -182,82 +182,49 @@ app.get(
     let page = req.query.page || 1;
     let searchText = req.query.searchText;
     let count = 0;
-    //counts total of surfspots that match search
-    await Surfspot.countDocuments(
-      {
-        $or: [
-          {
-            spotName: {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
-            },
-          },
-          {
-            'location.country': {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
-            },
-          },
-          {
-            'location.Subzone1': {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
-            },
-          },
-          {
-            'location.Subzone2': {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
-            },
-          },
-          {
-            'location.subzone3': {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
-            },
-          },
-          {
-            'location.subzone4': {
-              $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
-            },
-          },
-        ],
-      },
-      function (err, number) {
-        count = number;
-      }
-    ).clone();
-
-    //searches the collection for matches of given string to location, or name of spot. case insensitive.
-    const surfspots = await Surfspot.find({
+    const searchRegex = new RegExp(/*"^" + */ searchText.toLowerCase(), 'i');
+    const query = {
       $or: [
         {
           spotName: {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
+            $regex: searchRegex,
           },
         },
         {
           'location.country': {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
+            $regex: searchRegex,
           },
         },
         {
           'location.Subzone1': {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
+            $regex: searchRegex,
           },
         },
         {
           'location.Subzone2': {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
+            $regex: searchRegex,
           },
         },
         {
           'location.subzone3': {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
+            $regex: searchRegex,
           },
         },
         {
           'location.subzone4': {
-            $regex: new RegExp(/*"^" + */ searchText.toLowerCase(), 'i'),
+            $regex: searchRegex,
           },
         },
       ],
-    })
+    };
+    //counts total of surfspots that match search
+    Surfspot.countDocuments(query, function (err, number) {
+      if (err) return next(err);
+      count = number;
+    }).clone();
+
+    //searches the collection for matches of given string to location, or name of spot. case insensitive.
+    const surfspots = Surfspot.find(query)
       //pagination for above results
       .skip(perPage * page - perPage)
       .limit(perPage)
@@ -295,7 +262,7 @@ app.get(
     let perPage = 10;
     let page = req.params.page || 1;
     //pagination for the index. 10 per page
-    const surfspots = await Surfspot.find({})
+    const surfspots = Surfspot.find({})
       .skip(perPage * page)
       .limit(perPage)
       .exec(function (err, surfspots) {
@@ -392,5 +359,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log('Serving Port: ' + process.env.PORT);
+  const port = process.env.PORT ? process.env.PORT : '3000';
+  console.log('Serving Port: ' + port);
 });
